@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "police-risk-open-ai"
+  site-url: "https://AndreasThinks.github.io/police-risk-open-ai"
+  description: "Exploring police risk assessments using OpenAI and LLMs"
+  repo-branch: main
+  repo-url: "https://github.com/AndreasThinks/police-risk-open-ai"
