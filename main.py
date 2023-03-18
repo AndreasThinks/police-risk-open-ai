@@ -9,7 +9,7 @@ EMBEDDING_URL= os.getenv("EMBEDDING_URL")
 
 st.title('Missing Risk Scanner')
 
-st.markdown('''This scanner uses the [gpt-3.5-turbo API from OpenAI](https://openai.com/), as well as information from [the College of Policing](https://www.college.police.uk/), to attempt to produce risk assessments in relation to missing people.
+st.markdown('''This scanner uses the [Davinci API from OpenAI](https://openai.com/), as well as information from [the College of Policing](https://www.college.police.uk/), to attempt to produce risk assessments in relation to missing people.
 
 This tool is *highly experimental*, inteded as a proof of concept, and should not be used with real personal data.''')
 
