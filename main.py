@@ -9,6 +9,10 @@ EMBEDDING_URL= os.getenv("EMBEDDING_URL")
 
 st.title('Missing Risk Scanner')
 
+st.markdown('''This scanner uses the [gpt-3.5-turbo API from OpenAI](https://openai.com/), as well as information from [the College of Policing](https://www.college.police.uk/), to attempt to produce risk assessments in relation to missing people.
+
+This tool is *highly experimental*, inteded as a proof of concept, and should not be used with real personal data.''')
+
 @st.cache_data
 def load_data():
     data = pd.read_parquet(EMBEDDING_URL)
@@ -24,8 +28,9 @@ data_load_state.text("Data is loaded")
 risk_prompt = st.text_area("What do you know so far?")
 
 if st.button("Evaluate"):
-    risk_answer, risk_context = machine_risk_assessment(risk_prompt, data, debug=True)
+    risk_answer, risk_context = machine_risk_assessment(risk_prompt, data, model='gpt-3.5-turbo', debug=True)
     st.subheader(risk_answer)
+    st.write('The below data sources contributed to this answer:')
     st.caption(risk_context)
 else:
     st.write('Enter key details and click evaluate to begin.')
