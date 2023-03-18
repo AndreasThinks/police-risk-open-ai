@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 import os
 import pandas as pd
 
-# %% ../nbs/01_crawl.ipynb 11
+# %% ../nbs/01_crawl.ipynb 9
 # Create a class to parse the HTML and get the hyperlinks
 class HyperlinkParser(HTMLParser):
     def __init__(self):
@@ -138,7 +138,7 @@ def crawl(url):
 
 
 
-# %% ../nbs/01_crawl.ipynb 15
+# %% ../nbs/01_crawl.ipynb 13
 def remove_newlines(serie):
     serie = serie.str.replace('\n', ' ')
     serie = serie.str.replace('\\n', ' ')

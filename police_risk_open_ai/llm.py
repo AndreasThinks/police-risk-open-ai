@@ -4,7 +4,7 @@
 __all__ = ['query_llm', 'split_into_many', 'produce_df_embeddings', 'create_context', 'answer_question',
            'answer_sergeant_exam_question', 'conduct_risk_assessment', 'machine_risk_assessment']
 
-# %% ../nbs/00_llm.ipynb 3
+# %% ../nbs/00_llm.ipynb 4
 import os
 from dotenv import load_dotenv
 import pandas as pd
@@ -15,12 +15,12 @@ import numpy as np
 from openai.embeddings_utils import distances_from_embeddings
 
 
-# %% ../nbs/00_llm.ipynb 5
+# %% ../nbs/00_llm.ipynb 6
 load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# %% ../nbs/00_llm.ipynb 11
+# %% ../nbs/00_llm.ipynb 12
 def query_llm(prompt,model="text-davinci-003"):
     "Given a prompt, will query OpenAI and return the output"
     
@@ -30,7 +30,7 @@ def query_llm(prompt,model="text-davinci-003"):
     return text
 
 
-# %% ../nbs/00_llm.ipynb 18
+# %% ../nbs/00_llm.ipynb 20
 # Function to split the text into chunks of a maximum number of tokens
 def split_into_many(text, max_tokens = 500):
 
@@ -68,7 +68,7 @@ def split_into_many(text, max_tokens = 500):
     
 
 
-# %% ../nbs/00_llm.ipynb 37
+# %% ../nbs/00_llm.ipynb 31
 def produce_df_embeddings(df, chunk_size=100):
     """produces embeddings from the open AI api in chunks """
 
@@ -101,7 +101,7 @@ def produce_df_embeddings(df, chunk_size=100):
     
     return chunked_df.sort_index()
 
-# %% ../nbs/00_llm.ipynb 38
+# %% ../nbs/00_llm.ipynb 35
 def create_context(
     question, df, max_len=1800, size="ada"
 ):
@@ -135,7 +135,7 @@ def create_context(
     # Return the context
     return "\n\n###\n\n".join(returns)
 
-# %% ../nbs/00_llm.ipynb 39
+# %% ../nbs/00_llm.ipynb 36
 def answer_question(
     df,
     model="text-davinci-003",
@@ -177,7 +177,7 @@ def answer_question(
         print(e)
         return ""
 
-# %% ../nbs/00_llm.ipynb 43
+# %% ../nbs/00_llm.ipynb 40
 def answer_sergeant_exam_question(
     df,
     question,
@@ -225,7 +225,7 @@ def answer_sergeant_exam_question(
         print(e)
         return ""
 
-# %% ../nbs/00_llm.ipynb 52
+# %% ../nbs/00_llm.ipynb 48
 def conduct_risk_assessment(
     df,
     question,
@@ -283,7 +283,7 @@ if the question can't be answered based on the context, say \"I don't know\"\n\n
         print(e)
         return ""
 
-# %% ../nbs/00_llm.ipynb 57
+# %% ../nbs/00_llm.ipynb 53
 def machine_risk_assessment(
     question,
     df,
@@ -321,6 +321,7 @@ if the question can't be answered based on the context, say \"I don't know\"\n\n
 
     
     if debug:
+        print("Question:\n" + question)
         print("Context:\n" + context)
         print("\n\n")
 
