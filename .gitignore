@@ -1,6 +1,9 @@
 _docs/
 _proc/
 
+nbs/text
+nbs/processed
+
 *.bak
 .gitattributes
 .last_checked
