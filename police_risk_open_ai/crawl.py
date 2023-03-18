@@ -158,7 +158,7 @@ def clean_scrapped_data(scrape_directory, output_file='processed/scraped.csv'):
     for file in os.listdir(scrape_directory + "/"):
 
         # Open the file and read the text
-        with open("text/" + domain + "/" + file, "r", encoding="UTF-8") as f:
+        with open(scrape_directory + "/" + file, "r", encoding="UTF-8") as f:
             text = f.read()
 
             # Omit the first 11 lines and the last 4 lines, then replace -, _, and #update with spaces.
