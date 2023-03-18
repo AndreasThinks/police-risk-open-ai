@@ -28,7 +28,7 @@ data_load_state.text("Data is loaded")
 risk_prompt = st.text_area("What do you know so far?")
 
 if st.button("Evaluate"):
-    risk_answer, risk_context = machine_risk_assessment(risk_prompt, data, model='gpt-3.5-turbo', debug=True)
+    risk_answer, risk_context = machine_risk_assessment(risk_prompt, data)
     st.subheader(risk_answer)
     st.write('The below data sources contributed to this answer:')
     st.caption(risk_context)
