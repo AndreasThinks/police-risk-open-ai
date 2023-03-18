@@ -1,16 +1,31 @@
-# This is a sample Python script.
+import streamlit as st
+import pandas as pd
+import os
+from police_risk_open_ai.llm import *
+from dotenv import load_dotenv
+load_dotenv()
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+EMBEDDING_URL= os.getenv("EMBEDDING_URL")
 
+st.title('Missing Risk Scanner')
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+@st.cache_data
+def load_data():
+    data = pd.read_parquet(EMBEDDING_URL)
+    return data
 
+# Create a text element and let the reader know the data is loading.
+data_load_state = st.text('Loading data...')
+# Load 10,000 rows of data into the dataframe.
+data = load_data()
+# Notify the reader that the data was successfully loaded.
+data_load_state.text("Done! (using st.cache_data)")
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+risk_prompt = st.text_area("What do you know so far?")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if st.button("Evaluate"):
+    risk_answer, risk_context = machine_risk_assessment(risk_prompt, data, debug=True)
+    st.subheader(risk_answer)
+    st.caption(risk_context)
+else:
+    st.write('Enter key details and click evaluate to begin.')
