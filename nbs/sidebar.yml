@@ -4,4 +4,5 @@ website:
       - index.ipynb
       - 00_llm.ipynb
       - 01_crawl.ipynb
+      - chat_api.ipynb
       - explainer.ipynb

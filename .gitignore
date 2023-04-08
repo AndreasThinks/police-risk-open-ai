@@ -3,6 +3,8 @@ _proc/
 
 nbs/text
 nbs/processed
+nbs/text
+nbs/scrape_export
 
 *.bak
 .gitattributes
