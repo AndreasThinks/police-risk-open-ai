@@ -305,7 +305,8 @@ Based on the above, please provide a risk assessment for the missing person, gui
 
 Return your answer in the format: 
 
-'Graded as X risk, because of the below risk factors:\n - Y \n - Z \n \n Given these factors...'
+'Graded as X risk, because of the below risk factors:\n - Y \n - Z \n \n 
+Given these factors...'
 
 Where X is your risk grading (high, medium, low, or no apparent risk) and Y and Z are a few sentences explaining the most important risks you have identified.
 
