@@ -5,6 +5,7 @@ nbs/text
 nbs/processed
 nbs/text
 nbs/scrape_export
+nbs/analysis_outputs
 
 *.bak
 .gitattributes
