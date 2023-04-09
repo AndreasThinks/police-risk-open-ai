@@ -4,5 +4,9 @@ website:
       - index.ipynb
       - 00_llm.ipynb
       - 01_crawl.ipynb
-      - chat_api.ipynb
-      - explainer.ipynb
+      - 02_variance_analysis.ipynb
+      - section: analysis
+        contents:
+          - analysis/chat_api.ipynb
+          - analysis/explainer.ipynb
+          - analysis/llm_risk_research.ipynb
