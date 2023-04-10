@@ -10,3 +10,4 @@ website:
           - Analysis/chat_api.ipynb
           - Analysis/explainer.ipynb
           - Analysis/llm_risk_research.ipynb
+          - Analysis/research_paper.ipynb
