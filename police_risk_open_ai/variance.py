@@ -132,11 +132,12 @@ def clean_bulk_llm_return(bulk_return_df):
 
     bulk_return_df['message_lower'] = bulk_return_df['message'].str.lower()
     # define the regex pattern
-    pattern = r'\b(no apparent|low|medium|high)\s+risk\b'
+    pattern = r'\b(no apparent|low|medium|high)\s+risk'
 
     # extract the risk level using regex and store in a new column
     bulk_return_df['risk_grade'] = bulk_return_df['message_lower'].str.extract(pattern, flags=re.IGNORECASE)
 
+    bulk_return_df.loc[bulk_return_df['risk_grade'].isna(),'risk_grade'] = 'missing'
 
     bulk_return_df.loc[(bulk_return_df['risk_grade'].str.contains('high'))
     ,'risk_eval'] = 'high'
@@ -174,7 +175,7 @@ def copbot_chat_bulk_assessment(list_of_individual_circumstances, df, return_cou
 
     all_returns_list = []
 
-    scenario_number = 0
+    scenario_number = 1
 
     for circumstances in tqdm(list_of_individual_circumstances):
         while True:
