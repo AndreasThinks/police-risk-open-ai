@@ -5,8 +5,8 @@ website:
       - 00_llm.ipynb
       - 01_crawl.ipynb
       - 02_variance_analysis.ipynb
-      - section: analysis
+      - section: Analysis
         contents:
-          - analysis/chat_api.ipynb
-          - analysis/explainer.ipynb
-          - analysis/llm_risk_research.ipynb
+          - Analysis/chat_api.ipynb
+          - Analysis/explainer.ipynb
+          - Analysis/llm_risk_research.ipynb

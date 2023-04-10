@@ -45,5 +45,7 @@ d = { 'settings': { 'branch': 'main',
                                          'police_risk_open_ai.llm.query_llm': ('llm.html#query_llm', 'police_risk_open_ai/llm.py')},
             'police_risk_open_ai.variance': { 'police_risk_open_ai.variance.clean_bulk_llm_return': ( 'variance_analysis.html#clean_bulk_llm_return',
                                                                                                       'police_risk_open_ai/variance.py'),
+                                              'police_risk_open_ai.variance.copbot_chat_bulk_assessment': ( 'variance_analysis.html#copbot_chat_bulk_assessment',
+                                                                                                            'police_risk_open_ai/variance.py'),
                                               'police_risk_open_ai.variance.generate_bulk_llm_responses': ( 'variance_analysis.html#generate_bulk_llm_responses',
                                                                                                             'police_risk_open_ai/variance.py')}}}

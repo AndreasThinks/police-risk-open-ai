@@ -2,11 +2,13 @@
 
 # %% auto 0
 __all__ = ['copbot_chat_content', 'copbot_question_intro', 'copbot_question_outro', 'generate_bulk_llm_responses',
-           'clean_bulk_llm_return']
+           'clean_bulk_llm_return', 'copbot_chat_bulk_assessment']
 
 # %% ../nbs/02_variance_analysis.ipynb 3
 import pandas as pd
 import os
+import re
+
 
 from .llm import *
 from dotenv import load_dotenv
@@ -19,7 +21,7 @@ import seaborn as sns
 
 
 
-# %% ../nbs/02_variance_analysis.ipynb 5
+# %% ../nbs/02_variance_analysis.ipynb 6
 copbot_chat_content = '''
 You are CopBot, an assistant designed to help police officers risk assess missing persons.
 
@@ -55,7 +57,7 @@ Always return your answer in this format, unless the question can't be answered 
 
 
 
-# %% ../nbs/02_variance_analysis.ipynb 7
+# %% ../nbs/02_variance_analysis.ipynb 8
 def generate_bulk_llm_responses(return_count=10,age_list = [5,10,14,16,20,25,50,75,100],ethnicity_list = ['White', 'Mixed', 'Asian', 'Black'], temperature_list = [0,0.5,1,1.5,2]):
     """Generates a bulk set of responses from the LLM model"""
 
@@ -121,35 +123,33 @@ def generate_bulk_llm_responses(return_count=10,age_list = [5,10,14,16,20,25,50,
 
 
 
-# %% ../nbs/02_variance_analysis.ipynb 10
+# %% ../nbs/02_variance_analysis.ipynb 11
 def clean_bulk_llm_return(bulk_return_df):
     """Given a bulk LLM output, cleans it for analysis"""
 
+    bulk_return_df = bulk_return_df.reset_index(drop=True)
     regex_str = 'graded(.*)risk'
 
     bulk_return_df['message_lower'] = bulk_return_df['message'].str.lower()
-    bulk_return_df['risk_grade'] = bulk_return_df['message_lower'].str.extract(regex_str, expand=False)
+    # define the regex pattern
+    pattern = r'\b(no apparent|low|medium|high)\s+risk\b'
 
-    bulk_return_df.loc[bulk_return_df['risk_grade'].isna(),'risk_grade'] = 'missing'
-    bulk_return_df.loc[bulk_return_df['risk_grade']=='missing','risk_eval'] = 'missing'
+    # extract the risk level using regex and store in a new column
+    bulk_return_df['risk_grade'] = bulk_return_df['message_lower'].str.extract(pattern, flags=re.IGNORECASE)
 
 
-
-    bulk_return_df.loc[(bulk_return_df['risk_grade'].str.contains('high')) & (bulk_return_df['risk_eval'].isna())
+    bulk_return_df.loc[(bulk_return_df['risk_grade'].str.contains('high'))
     ,'risk_eval'] = 'high'
-    bulk_return_df.loc[(bulk_return_df['risk_grade'].str.contains('medium')) & (bulk_return_df['risk_eval'].isna())
+    bulk_return_df.loc[(bulk_return_df['risk_grade'].str.contains('medium'))
     ,'risk_eval'] = 'medium'
-    bulk_return_df.loc[(bulk_return_df['risk_grade'].str.contains('low')) & (bulk_return_df['risk_eval'].isna())
+    bulk_return_df.loc[(bulk_return_df['risk_grade'].str.contains('low'))
     ,'risk_eval'] = 'low'
-    bulk_return_df.loc[(bulk_return_df['risk_grade'].str.contains('no apparent')) & (bulk_return_df['risk_eval'].isna())
+    bulk_return_df.loc[(bulk_return_df['risk_grade'].str.contains('no apparent'))
     ,'risk_eval'] = 'absent'
 
     bulk_return_df.loc[bulk_return_df['risk_eval'].isna(),'risk_eval'] = 'missing'
 
-    bulk_return_df['ethnicity'] = bulk_return_df['ethnicity'].astype('category')
     bulk_return_df['risk_eval'] = bulk_return_df['risk_eval'].astype('category')
-    bulk_return_df['risk_eval'] = bulk_return_df['risk_eval'].astype('category')
-    bulk_return_df['age_category'] = bulk_return_df['age'].astype('category')
 
     bulk_return_df['risk_eval'] = pd.Categorical(bulk_return_df['risk_eval'], categories=['missing','absent','low','medium', 'high'],
                         ordered=True)
@@ -167,3 +167,47 @@ def clean_bulk_llm_return(bulk_return_df):
 
 
 
+
+# %% ../nbs/02_variance_analysis.ipynb 14
+def copbot_chat_bulk_assessment(list_of_individual_circumstances, df, return_count=10):
+    """Takes a list of individual circumstances and returns a list of responses from the LLM"""
+
+    all_returns_list = []
+
+    scenario_number = 0
+
+    for circumstances in tqdm(list_of_individual_circumstances):
+        while True:
+            try:
+                individual_context = create_chat_assistant_content(circumstances, df)
+
+
+                question_and_context = copbot_question_intro + circumstances + copbot_question_outro
+
+                openai_response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                n=return_count,
+                messages=[
+                        {"role": "system", "content": copbot_chat_content},
+                        {"role": "user", "content": question_and_context},
+                        {"role": "assistant", "content": individual_context},
+                    ]
+                )
+
+                response_df = pd.json_normalize(openai_response['choices']).rename(columns={'message.content':'message'}).drop(columns=['finish_reason', 'index', 'message.role'])
+
+                response_df['circumstances'] = circumstances
+                response_df['individual_context'] = individual_context
+                response_df['scenario_number'] = scenario_number
+
+                all_returns_list.append(response_df)
+                scenario_number += 1
+                break  # exit the loop if the API call is successful
+            except Exception as e:
+                print(f"Error: {e}")
+                print("Retrying in 5 seconds...")
+                time.sleep(5)  # wait for 5 seconds before trying again
+
+    all_returns_df = pd.concat(all_returns_list)
+
+    return all_returns_df
