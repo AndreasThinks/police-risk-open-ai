@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>police-risk-open-ai - An OpenAI Experiment - CopBot!</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="police-risk-open-ai - An OpenAI Experiment - CopBot!">
+<meta property="og:description" content="You’ve probably already played with the public version of ChatGPT, and hopefully understand the basic principles:the language model trained on a huge corpus of publicly available text, trained to…">
+<meta property="og:site-name" content="police-risk-open-ai">
+<meta name="twitter:title" content="police-risk-open-ai - An OpenAI Experiment - CopBot!">
+<meta name="twitter:description" content="You’ve probably already played with the public version of ChatGPT, and hopefully understand the basic principles:the language model trained on a huge corpus of publicly available text, trained to…">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">police-risk-open-ai</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">An OpenAI Experiment - CopBot!</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">police-risk-open-ai</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../llm.html" class="sidebar-item-text sidebar-link">LLM</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../crawl.html" class="sidebar-item-text sidebar-link">Crawl</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../variance_analysis.html" class="sidebar-item-text sidebar-link">Variance Analysis</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Analysis</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/chat_api.html" class="sidebar-item-text sidebar-link">chat_api.html</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/explainer.html" class="sidebar-item-text sidebar-link active">An OpenAI Experiment - CopBot!</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/llm_risk_research.html" class="sidebar-item-text sidebar-link">Police versus Machine Assessed Risk</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/research_paper.html" class="sidebar-item-text sidebar-link">Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#teaching-policing-to-ai" id="toc-teaching-policing-to-ai" class="nav-link active" data-scroll-target="#teaching-policing-to-ai">Teaching policing to AI</a></li>
+  <li><a href="#so-does-it-work" id="toc-so-does-it-work" class="nav-link" data-scroll-target="#so-does-it-work">So does it work?</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/AndreasThinks/police-risk-open-ai/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">An OpenAI Experiment - CopBot!</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="teaching-policing-to-ai" class="level2">
+<h2 class="anchored" data-anchor-id="teaching-policing-to-ai">Teaching policing to AI</h2>
+<p>You’ve probably already played with the <a href="https://openai.com/blog/chatgpt">public version of ChatGPT</a>, and hopefully understand the basic principles:the language model trained on a huge corpus of publicly available text, trained to answer questions in a helpful way…but not necessarily an operationally useful one, nor one that takes into account of legislation and best practice. If you had all the relevant documentation to hand, and knew exactly which was most relevant, you could just feed it into your prompt - something like “answer this operation question, but consider this legislative text” - but how do you do that if you don’t know what’s relevant? If you want to teach it how to investigate missing people, where do you event start? Thankfully, the professional body for policings <a href="https://www.college.police.uk/app/major-investigation-and-public-protection/missing-persons">Authorised Professional Practice</a> in one place (though sadly not through an API), so we’ll start there, by using a clever crawler script to download each page, as well as any other document it refers to.</p>
+<p>The next stage is to convert all those documents into <a href="https://platform.openai.com/docs/guides/embeddings">embeddings</a>, turning them from text into numerical representation of what the model thinks they actually mean. I’ve previously done those computations myself, using libraries like <a href="https://huggingface.co/">Huggingface</a> or <a href="https://spacy.io/">Spacy</a>, but <a href="https://platform.openai.com/docs/guides/embeddings">OpenAI provides all of their embeddings through a quite affordable API you can query</a>.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Embeddings
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+</div>
+<p>Once you’ve converted all your all our documentation into embeddings, we can quickly calculate the distance between our question and each document, and that tells us which pieces from our corpus of of text is most closely associated to the question we’re asking!</p>
+<p>Unlike ChatGPT though, we want to limit our model to <em>only answer questions from that corpus</em>: if our documents don’t contain information about a certain topic, <a href="https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)">don’t just go and hallucinate a whole new answer</a>. Then it’s just a matter of writing our question to extract the most meaningful documents linked to our question, feed them into our prompt, and ask OpenAI to complete the answer, <em>unless it doesn’t know based off the documentation provided</em></p>
+<p>So how does it work? Well, let’s start by asking it some generic questions about policy.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>answer_question(df, question<span class="op">=</span><span class="st">"What are the most important factors to consider when searching for a missing person?"</span>, debug<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Context:
+Very detailed information and a lifestyle profile will be needed in high-risk cases consider taking a full statement from the person reporting the missing person as well as any other key individuals (for example, the last person to see them) conduct initial searches of relevant premises, the extent and nature of the search should be recorded (see&nbsp;Search) consider seizing electronic devices, computers, and other documentation, (for example, diaries, financial records and notes) and obtain details of usernames and passwords obtain photos of the missing person; these should ideally be current likeness of the missing person and obtained in a digital format obtain details of the individual’s mobile phone and if they have it with them; if the missing person has a mobile phone arrange for a&nbsp;TextSafe©&nbsp;to be sent by the charity, Missing People obtain details of any vehicles that they may have access to and place markers on relevant vehicles on the&nbsp;PNC&nbsp;without delay consider obtaining any physical evidence of identity such as fingerprints or DNA samples in accordance with&nbsp;Code of Practice (2009) Collection of Missing Persons Data. confirm if the person has taken their passport, (consider prompt circulation if it is deemed likely the individual may leave the country (This is particularly important where there are concerns that an individual has been radicalised and is intending to travel abroad,&nbsp;see&nbsp;National Ports Office – Heathrow) make all immediate relevant enquiries and take immediate actions in order to locate the missing person consider the need for specialist officers or resources, for example, force helicopters, dogs, financial investigation officers upload the missing person report circulate details of the missing person on local information systems and to relevant local partners, for example, hospitals, ambulance service, taxi and bus firms It is important for an individual (who has responsibilities/concerns for the missing person) to be identified who can act as the point of contact for the police. The police will agree with the individual/family when they will next be contacted. This person should be provided with a call reference number and given details of how to contact the police with any further information they have about the case or if they would like to receive an update. An assessment must be made of the level of support required for the family, residential worker or foster carer and consideration should be given to appointing a family liaison officer. Information should then be provided regarding additional organisations that may be able to assist or support them.
+
+###
+
+It is also important to record the name and contact details of the person who gave that information and when this happened. Missing people may be at risk of harm resulting from factors such as: an inability to cope with weather conditions being the victim of violent crime risks relating to non-physical harm, for example, the people they are with, the places or circumstances they are in For further information see&nbsp;Mental Vulnerability and illness: Vulnerability assessment framework&nbsp;and Vulnerability-related risk guidelines.&nbsp; Assessing risk levels and taking action The missing persons process chart and risk table can assist officers to assess the risk level and appropriate actions that should be assigned to each case.&nbsp;This is a framework to assist practitioners in making operational decisions. Each case requires individual assessment and decision-making. These resources have been developed based on professional expertise and practitioner experience and are available using the following links. Risk assessment table Missing persons process chart It is important to adopt an investigative approach to all reports, ensuring that assumptions are not made about the reasons for going missing. The importance and relevance of risk factors will depend on the circumstances of each case and require investigation to determine if there is a cause for concern. The approach should not be regarded as a mechanical one and police officers should be mindful that the risk assessment is subjective, and that just one factor alone may be considered important enough to prompt an urgent response. For this reason professional experience suggests that&nbsp;a numerical scoring system may not be the most appropriate method of identifying and communicating risk. A&nbsp;decision-making guide&nbsp;should be used to encourage consistency in the application of the process, however, it should only be used as a guide. Other grounds for suspicion, even if intuitive, can be registered by the investigator and officers should be supported in applying the&nbsp;National Decision Model&nbsp;when making these assessments. Accurate record keeping It is essential to accurately record the information received about a missing person. Information that may relate to any perceived risk should be captured at the time of reporting so that it can be used to inform any investigative enquires. This will also&nbsp;prevent duplication of questioning and&nbsp;report writing by investigation officers. Call handlers should be supported by their supervisors to ensure that sufficient time is given to each call to enable all the relevant information to be captured. Detailed missing person reports should be created&nbsp;and appropriate force recording systems and IT systems should be in place to support this process. It is important that the information used and rationale for the risk assessment is clearly recorded.
+
+###
+
+ First published 21 November 2016  Updated 22 November 2016   Written by College of Policing  Missing persons quick reference guides  4 mins read   The primary consideration for the first responder is the safety of the missing person.&nbsp;Judgements made at this early stage may have a significant impact on the outcome of the investigation. The initial investigating officer (IIO) should: begin the investigation – identify places where the person might be, check information and assumptions, corroborate what they have been told, review the risk assessment, seek and secure evidence conduct appropriate searches – places where the missing person might be such as hospital, custody, friends and or relatives conduct appropriate intelligence checks –&nbsp;PNC, force intelligence systems,&nbsp;ViSOR,&nbsp;PND continually reassess the level of risk using the risk principles assess the level of support required for the missing person’s family, residential worker or foster carer as appropriate If it is suspected a serious crime has occurred or the individual is at significant risk of harm, the&nbsp;IIO&nbsp;should inform a supervising officer immediately. There are a&nbsp;number of actions&nbsp;that may be carried out by the&nbsp;IIO&nbsp;to ensure that sufficient information is gathered: Consider seizing electronic devices, computers, and other documentation, for example, diaries, financial records and notes and obtain details of usernames and passwords. Obtain photos of the missing person. These should ideally be current likeness of the missing person and obtained in a digital format. Obtain details of the individual’s mobile phone and if they have it with them. If they do, arrange for a&nbsp;TextSafe©&nbsp;to be sent by the Missing People charity. Obtain details of any vehicles to which the missing person may have access. Confirm if the person has taken their passport; consider prompt circulation if it is deemed likely the individual may leave the country (This is particularly important where there are concerns that an individual has been radicalised and is intending to travel abroad. See&nbsp;National Ports Office – Heathrow.) Upload the missing person report and place markers on relevant vehicles on the&nbsp;PNC&nbsp;without delay. Circulate details of the missing person on local information systems and to relevant local partners, for example, hospitals, ambulance service, taxi and bus firms. Consider obtaining any physical evidence of identity such as fingerprints or DNA samples (in accordance with&nbsp;Code of Practice (2009) Collection of Missing Persons Data).
+
+
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>'The primary consideration for the first responder is the safety of the missing person. Judgements made at this early stage may have a significant impact on the outcome of the investigation. The initial investigating officer should begin the investigation by identifying places where the person might be, check information and assumptions, corroborate what they have been told, review the risk assessment, seek and secure evidence, conduct appropriate searches, conduct appropriate intelligence checks, continually reassess the level of risk using the risk principles, assess the level of support required for the missing person’s family, residential worker or foster carer as appropriate, consider seizing electronic devices, computers, and other documentation, obtain photos of the missing person, obtain details of the individual’s mobile phone, obtain'</code></pre>
+</div>
+</div>
+<p>You can see that as I’ve enabled debug mode on the function, it will start by printing the relevant documentation it has found (the context), before then giving its answer…which is actually pretty convicing! Let’s see what happens if I ask a question it can’t know the answer to.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>answer_question(df, question<span class="op">=</span><span class="st">"What day is it?"</span>, debug<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Context:
+.
+
+###
+
+It’s also been raining heavily in the night and we have further calls about flooding in the road, so we ring Highways to inform them. I have a little smile to myself as I remember a call in the summer about cars stopping on the M11 because a mother duck and her ducklings were crossing the road. Lunchtime looms. I’m feeling hungry, but that disappears when I take a call from a 16-year-old male, who tells me that he can’t cope any more. He has cut himself with a knife but he doesn’t want to die. His sister has just had a baby. This goes on an emergency straight away, and officers are dispatched within three minutes. I have to talk to him about anything I can to distract him from his misery – luckily, I am good at small talk! Officers arrive and I feel relief as I can hang up the phone. COVID-19 has really affected Essex this year. People are low and weary. You can hear it in their voices. The number of mental health incidents has gone through the roof, and even the force control room team is quieter. Because of&nbsp;the onset of lockdown restrictions, more calls are coming in from the public reporting their neighbours for flouting the rules: 'We’re following the rules, why don’t they? What makes them think they are special?'&nbsp; Gone are the past calls about drunken people leaving the pub. Instead, we have members of the public who are tired of being tied to the house and resentful of those who ignore the restrictions. After lunch, we receive a flurry of calls. There’s a domestic, involving a woman who tells me that ‘he didn’t mean to hit me, he loves me’. I spend time with this caller. There are three horses in the road. A driver has hit a dog and is upset, so I reassure him it wasn’t his fault. It gets busier. Essex is up and running but I am not. I feel tired but this is my job, so I make sure that nobody will hear it in my voice. Finally, it’s time to go home and hang up the headset for another day. I tend not to reflect on my day too much, so I can have some time to myself. There is no typical day in the control room.
+
+###
+
+The vessel is identified as a rigid-hull inflatable boat (RHIB), which has four people on board wearing foul-weather gear and balaclavas. It appears to still have half a load of bales suspected to contain cannabis resin, wrapped in their distinctive blue and light brown hessian (approximately ¾ of a ton in total). Blue police beacons are engaged and the vessel has been repeatedly signalled to stop, but continues to carry out manoeuvres in an attempt to gain distance. The sea spray is cold and strikes the flesh like pins and needles. After a few minutes, which feel like an eternity, the pursuit is discontinued at the 3NM limits of territorial waters. CAD are informed and requested to inform Spanish Guardia Civil of the vessel’s last known speed and heading. No doubt it will return that night to attempt to unload its remaining cargo. I monitor the area and one of the crew observes something floating in the water. It is suspected to be a bale of cannabis resin, approximately 30-35kg in weight. It is retrieved and found to be in a good state with no marine growth. It is unclear whether it fell off the vessel recently pursued or belongs to a previous incident. The area is searched but nothing more is found. I return to GGMS, where I conduct a debrief. The bale is processed and conveyed to a police station for secure storage. I then complete the necessary paperwork, while the crew slip a zodiac out from the water, which was linked to the recovery of five North African migrants from the sea the previous day, and place the vessel on land. We continue with the mundane but necessary yard and vessel maintenance work. We grab a bite to eat, chat about the morning pursuit and joke about our recent mishaps. The work can be intense but we always manage to fill it with laughter. It’s now 2pm. The afternoon crew arrive. I give them a brief and handover. I then deploy on our training RHIB. As a qualified police instructor, I carry out powerboat training drills for the junior crew member. It reminds me of my early days at the helm and I enjoy passing on the knowledge. At 3.30pm, I return to base and carry out a debrief on the day’s activities. It’s the end of the shift. Let’s see what the next day brings – maybe another encounter with that RHIB.
+
+###
+
+Change to the order of the documents.
+
+###
+
+.police.uk news views.            News &amp; views | College of Policing             Sorry, you need to enable JavaScript to visit this website.    Skip to content Jump to search         Menu      Secondary navigation About us News &amp; views Contact us  Search Search     Main navigation Policing guidance Research Career &amp; learning Support for forces Ethics     Breadcrumb Home           News &amp; views            News &amp; views         On this page         All news  Category: - Any -EventGoing equippedListicleBriefExplainerCase studyConsultationNewsViews  Sort by: Most recentLess recent       13 March 2023 Bursary scheme 2023 – applications now open   News  Applications for higher education funding are open and close on Monday 3 April.
+
+###
+
+Updated 26 July 2022    Brief   UK and Switzerland – agreement on police cooperation  Treaty to strengthen police cooperation between law enforcement authorities in both countries Published 24 March 2022    Case study   Director of intelligence – a day in the life  There is no such thing as a typical day in any policing role and the director of intelligence is no different Published 30 July 2021    Case study   Head of intelligence analysis – a day in the life  A key senior role in the analysis side of the intelligence job family Published 30 July 2021    Case study   Intelligence manager – a day in the life  Overseeing the management, development and collection of intelligence from various sources Published 30 July 2021    Case study   Intelligence unit supervisor – a day in the life  Leading a team of intelligence officers to gather, develop and disseminate intelligence in support of local and national crime investigations Published 30 July 2021    Case study   Senior intelligence analyst – a day in the life  Managing an analytical team or a specific area of business within the analytical function Published 30 July 2021    Case study   Intelligence support officer – a day in the life  Providing information and data management and broad administrative support as part of an intelligence unit Published 30 July 2021    Case study   Intelligence officer – a day in the life  Managing dissemination of gathered intelligence to support reactive, proactive and/or crimes in action and providing advice on appropriate tactical options to support policing priorities Published 30 July 2021    Case study   Researcher in intelligence – a day in the life  Using a wide variety of sources to assess and evaluate information – they can then advise on the creation of intelligence products used to support decision-making at a strategic, tactical and/or operational level Published 30 July 2021    Case study   Intelligence analyst – a day in the life  Providing expertise through the development and use of analytical products to help make decisions at a strategic, tactical and operational level Published 30 July 2021    Case study   Using intelligence skills to target criminals ethically and proportionately  A role where it's important to keep on top of your continuing professional development and learn from research and analysis colleagues Published 5 November 2020     Looking for more on this topic? Try searching Intelligence       Was this page useful?  Yes  No   Do not provide personal information such as your name or email address in the feedback form.
+
+
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>"I don't know."</code></pre>
+</div>
+</div>
+<p>Sucess! While it does find a bunch of documentation relating to the current day in our corpus, it does identify that it doesn’t know what the day is now.</p>
+<p>Let’s try something a little bit more technical, and see if it can answer a few questions from the <a href="https://www.college.police.uk/career-learning/taking-exams-online/nppf-step-two">Sergeants’ and inspectors’ NPPF legal exams</a>. I couldn’t find any official questions available publicly, <a href="https://www.how2become.com/blog/police-sergeants-inspectors-exam/">here are two questions from an online guidance service.</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">""" Officer Jennings is on his evening patrol. He is just about to finish for the day. As he walks down the street, he is approached by a man named Mark, who claims that he saw a man (named Steven) driving down a road not far from the location. Mark claims that he saw Steven drive into a cyclist, before driving off without stopping. Luckily, the cyclist was unharmed. The cyclist was named Kevin. Mark spoke to Kevin, and discovered that he is a 42 year old man, with a wife and two daughters.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="st">Fifteen minutes later, Officer Jennings manages to stop the car being driven by Steven. He pulls him over to the side of the road, and orders him to step out of the car.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="st">Referring s.6 (5) of the Road Traffic Act 1988, is Officer Jennings within his legal rights to order that Steven takes a preliminary breath test?</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="st">A – No. Officer Jennings has no right to tell Steven what he can and can’t do. He should never have stopped Steven in the first place.</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="st">B – No. In order for Officer Jennings to do this, an accident must have happened. The fact that Officer Jennings suspects an accident has taken place, does not meet this requirement.</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="st">C – Yes. However, the breath test must take place within or close to an area where the requirements for Steven to cooperate, can be imposed.</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="st">D – Yes. Officer Jennings can tell Steven to do whatever he wants, as he’s a police officer."""</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>answer_sergeant_exam_question(df,question)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'B - No. In order for Officer Jennings to do this, an accident must have happened. The fact that Officer Jennings suspects an accident has taken place, does not meet this requirement.'</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>question <span class="op">=</span> <span class="st">"""Sarah is walking to work one morning, when she is approached from behind by Henry and Jacob.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">‘We won’t hurt you, as long as you give us the bag,’ Henry says.</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">‘You’re not getting it!’ Sarah shouts.</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="st">Henry grabs Sarah and holds a knife to her throat, whilst Jacob tries to snatch her bag.</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="st">Sarah fights with her attackers, and begins to run away. As the two men chase her, she trips and bangs her head on the pavement. She is taken to hospital and dies from head trauma.</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="st">Based on the above information, which of the following options is correct?</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="st">A – Jacob cannot be held accountable for the death of Sarah, as he simply tried to take her bag.</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="st">B – Jacob and Henry will be charged with attempted robbery, but not in the death of Sarah.</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="st">C – Jacob and Henry could be considered liable for the death of Sarah.</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="st">D – Sarah’s death cannot be blamed on Henry and Jacob, as it was her choice to run away."""</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>answer_sergeant_exam_question(df,question)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'C - The answer is C because Jacob and Henry could be considered liable for the death of Sarah, as they were the ones who initiated the attack and chased her, which led to her tripping and hitting her head.'</code></pre>
+</div>
+</div>
+<p>The answer both should have been C, so that’s 50/50 for CopBot… not bad! You can see it’s referring to to relevant guidance, but sadly that doesn’t really help you pass a promotion exam (though I suspect it would do seriously well trained on a bank of questions instead).</p>
+</section>
+<section id="so-does-it-work" class="level2">
+<h2 class="anchored" data-anchor-id="so-does-it-work">So does it work?</h2>
+<p>Before we test our model on fictional missing scenarios, I made one last tweak: I’ve amended the prompt to explictly refer to identified risk factors, and return them in a given format - you can see how it works below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>margaret_risk_profile <span class="op">=</span> <span class="st">""" Margaret is a 97 year old woman with severe dementia from Twickenham. She lives in supported accomodation, but regularly goes missing, as she walks out when left unsupervised.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="st">She has been missing 6 hours, and it is now 2200.  It is getting dark, and staff are saying she is rarely missing this long"""</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>margaret_answer <span class="op">=</span> machine_risk_assessment(margaret_risk_profile, df, debug<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>margaret_answer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Question:
+ Margaret is a 97 year old woman with severe dementia from Twickenham. She lives in supported accomodation, but regularly goes missing, as she walks out when left unsupervised.
+
+She has been missing 6 hours, and it is now 2200.  It is getting dark, and staff are saying she is rarely missing this long
+Context:
+.police.uk research projects maximizing effectiveness police scotland investigations when people living dementia go missing.            Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing | College of Policing             Sorry, you need to enable JavaScript to visit this website.    Skip to content Jump to search         Menu      Secondary navigation About us News &amp; views Contact us  Search Search     Main navigation Policing guidance Research Career &amp; learning Support for forces Ethics     Breadcrumb Home Research Research projects map           Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing            Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing         On this page     This research aims to explore the effectiveness of searches for people living with dementia who are reported as missing. Key details             Lead institution            Queen Margaret University             Principal researcher(s)            Alistair Shields [email&nbsp;protected]             Police region                   Scotland                    Level of research                   PhD                    Project start date            September 2018             Date due for completion            January 2023  Research context In Scotland annually there are approximately 530 missing person incidents reported to the police for people living with dementia. These incidents are emotionally distressing for the families and caregivers who do not know the whereabouts of the reported person. For the person living with dementia the consequences of being missing worsen with the passage of time. It has been suggested that when reported as missing the person travels toward a place orientated to their past. The knowledge of such locations to inform police investigations, when someone is reported as missing, is commonly not available. Aim For people living with dementia who are reported as missing to improve search effectiveness by better defining areas where police should search.
+
+###
+
+ First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see&nbsp;APP&nbsp;on international investigation&nbsp;for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see&nbsp;Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child&nbsp; Voice of the child practice briefing&nbsp; Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children&nbsp;may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,&nbsp;as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to&nbsp;work with all the agencies and carers&nbsp;that&nbsp;have been&nbsp;in regular contact with the child as they&nbsp;may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.
+
+###
+
+Threshold for referral of missing persons: the individual is a ‘repeat missing person’, (reported as missing three times in a rolling 90 day period) the individual has experienced, or is likely to experience significant harm for children, the parent or carer appears unable or unwilling to work to support and meet the needs of a child that has gone missing. The&nbsp;Protection Procedures&nbsp;also recommend that there is very close working between children's social care and policing to ensure that all investigations are undertaken efficiently and without duplication of effort. Where appropriate, a multi-agency meeting is convened after a child has been missing from home or care for more than seven days, or has been missing on more than three occasions in a twelve month period. While standard thresholds for referral may be useful, senior officers will want to be sure that a process is in place to ensure cases are recognised which may require a greater safeguarding response before the threshold has been reached. For example, individuals reported missing for the first time where significant risks have been identified should be referred immediately for multi-agency support, without requiring further reports. For further information see&nbsp;HM Government (2018) Working together to safeguard children: A guide to inter-agency working to safeguard and promote the welfare of children. Prevention and intervention strategies Collecting and analysing data about cases will help the police and other agencies to understand whether there are any patterns related to missing persons incidents. The results of routine data analysis should be shared to inform the development and review of prevention and intervention strategies. Missing Persons Coordinators are vital for this information analysis and sharing. Interventions might include, for example, the use of&nbsp;Child Abduction Warning Notices, or referrals to support services. It is important that such interventions take place in appropriate circumstances and are not used as a single response when a person is at risk of harm, but form one strand of a more comprehensive approach. Regular liaison between neighbourhood policing teams and children’s and adults’ care providers may enable relationships to be developed between police officers, the staff of care establishments, and individuals who are looked after. These relationships may then support effective police intervention and the speedy resolution of cases. For lessons from other cases, see&nbsp;IOPC&nbsp;Learning the Lesson. Understanding the reasons for going missing Understanding the reasons why an individual went missing may help to prevent future harm to those individuals. The officers in charge of local areas should have clear plans on how they intend to reduce the number of people who go missing in their area.
+
+###
+
+It’s also been raining heavily in the night and we have further calls about flooding in the road, so we ring Highways to inform them. I have a little smile to myself as I remember a call in the summer about cars stopping on the M11 because a mother duck and her ducklings were crossing the road. Lunchtime looms. I’m feeling hungry, but that disappears when I take a call from a 16-year-old male, who tells me that he can’t cope any more. He has cut himself with a knife but he doesn’t want to die. His sister has just had a baby. This goes on an emergency straight away, and officers are dispatched within three minutes. I have to talk to him about anything I can to distract him from his misery – luckily, I am good at small talk! Officers arrive and I feel relief as I can hang up the phone. COVID-19 has really affected Essex this year. People are low and weary. You can hear it in their voices. The number of mental health incidents has gone through the roof, and even the force control room team is quieter. Because of&nbsp;the onset of lockdown restrictions, more calls are coming in from the public reporting their neighbours for flouting the rules: 'We’re following the rules, why don’t they? What makes them think they are special?'&nbsp; Gone are the past calls about drunken people leaving the pub. Instead, we have members of the public who are tired of being tied to the house and resentful of those who ignore the restrictions. After lunch, we receive a flurry of calls. There’s a domestic, involving a woman who tells me that ‘he didn’t mean to hit me, he loves me’. I spend time with this caller. There are three horses in the road. A driver has hit a dog and is upset, so I reassure him it wasn’t his fault. It gets busier. Essex is up and running but I am not. I feel tired but this is my job, so I make sure that nobody will hear it in my voice. Finally, it’s time to go home and hang up the headset for another day. I tend not to reflect on my day too much, so I can have some time to myself. There is no typical day in the control room.
+
+
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>('Graded as High risk, because of the below risk factors: \n- Margaret is 97 years old and has severe dementia, making her more vulnerable to harm\n- She has been missing for 6 hours, which is longer than usual, and it is now dark outside, increasing the risk of harm',
+ ".police.uk research projects maximizing effectiveness police scotland investigations when people living dementia go missing.            Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing | College of Policing             Sorry, you need to enable JavaScript to visit this website.    Skip to content Jump to search         Menu      Secondary navigation About us News &amp; views Contact us  Search Search     Main navigation Policing guidance Research Career &amp; learning Support for forces Ethics     Breadcrumb Home Research Research projects map           Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing            Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing         On this page     This research aims to explore the effectiveness of searches for people living with dementia who are reported as missing. Key details             Lead institution            Queen Margaret University             Principal researcher(s)            Alistair Shields [email\xa0protected]             Police region                   Scotland                    Level of research                   PhD                    Project start date            September 2018             Date due for completion            January 2023  Research context In Scotland annually there are approximately 530 missing person incidents reported to the police for people living with dementia. These incidents are emotionally distressing for the families and caregivers who do not know the whereabouts of the reported person. For the person living with dementia the consequences of being missing worsen with the passage of time. It has been suggested that when reported as missing the person travels toward a place orientated to their past. The knowledge of such locations to inform police investigations, when someone is reported as missing, is commonly not available. Aim For people living with dementia who are reported as missing to improve search effectiveness by better defining areas where police should search.\n\n###\n\n First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see\xa0APP\xa0on international investigation\xa0for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see\xa0Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child\xa0 Voice of the child practice briefing\xa0 Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children\xa0may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,\xa0as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to\xa0work with all the agencies and carers\xa0that\xa0have been\xa0in regular contact with the child as they\xa0may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.\n\n###\n\nThreshold for referral of missing persons: the individual is a ‘repeat missing person’, (reported as missing three times in a rolling 90 day period) the individual has experienced, or is likely to experience significant harm for children, the parent or carer appears unable or unwilling to work to support and meet the needs of a child that has gone missing. The\xa0Protection Procedures\xa0also recommend that there is very close working between children's social care and policing to ensure that all investigations are undertaken efficiently and without duplication of effort. Where appropriate, a multi-agency meeting is convened after a child has been missing from home or care for more than seven days, or has been missing on more than three occasions in a twelve month period. While standard thresholds for referral may be useful, senior officers will want to be sure that a process is in place to ensure cases are recognised which may require a greater safeguarding response before the threshold has been reached. For example, individuals reported missing for the first time where significant risks have been identified should be referred immediately for multi-agency support, without requiring further reports. For further information see\xa0HM Government (2018) Working together to safeguard children: A guide to inter-agency working to safeguard and promote the welfare of children. Prevention and intervention strategies Collecting and analysing data about cases will help the police and other agencies to understand whether there are any patterns related to missing persons incidents. The results of routine data analysis should be shared to inform the development and review of prevention and intervention strategies. Missing Persons Coordinators are vital for this information analysis and sharing. Interventions might include, for example, the use of\xa0Child Abduction Warning Notices, or referrals to support services. It is important that such interventions take place in appropriate circumstances and are not used as a single response when a person is at risk of harm, but form one strand of a more comprehensive approach. Regular liaison between neighbourhood policing teams and children’s and adults’ care providers may enable relationships to be developed between police officers, the staff of care establishments, and individuals who are looked after. These relationships may then support effective police intervention and the speedy resolution of cases. For lessons from other cases, see\xa0IOPC\xa0Learning the Lesson. Understanding the reasons for going missing Understanding the reasons why an individual went missing may help to prevent future harm to those individuals. The officers in charge of local areas should have clear plans on how they intend to reduce the number of people who go missing in their area.\n\n###\n\nIt’s also been raining heavily in the night and we have further calls about flooding in the road, so we ring Highways to inform them. I have a little smile to myself as I remember a call in the summer about cars stopping on the M11 because a mother duck and her ducklings were crossing the road. Lunchtime looms. I’m feeling hungry, but that disappears when I take a call from a 16-year-old male, who tells me that he can’t cope any more. He has cut himself with a knife but he doesn’t want to die. His sister has just had a baby. This goes on an emergency straight away, and officers are dispatched within three minutes. I have to talk to him about anything I can to distract him from his misery – luckily, I am good at small talk! Officers arrive and I feel relief as I can hang up the phone. COVID-19 has really affected Essex this year. People are low and weary. You can hear it in their voices. The number of mental health incidents has gone through the roof, and even the force control room team is quieter. Because of\xa0the onset of lockdown restrictions, more calls are coming in from the public reporting their neighbours for flouting the rules: 'We’re following the rules, why don’t they? What makes them think they are special?'\xa0 Gone are the past calls about drunken people leaving the pub. Instead, we have members of the public who are tired of being tied to the house and resentful of those who ignore the restrictions. After lunch, we receive a flurry of calls. There’s a domestic, involving a woman who tells me that ‘he didn’t mean to hit me, he loves me’. I spend time with this caller. There are three horses in the road. A driver has hit a dog and is upset, so I reassure him it wasn’t his fault. It gets busier. Essex is up and running but I am not. I feel tired but this is my job, so I make sure that nobody will hear it in my voice. Finally, it’s time to go home and hang up the headset for another day. I tend not to reflect on my day too much, so I can have some time to myself. There is no typical day in the control room.")</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>about_james <span class="op">=</span> <span class="st">""" </span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="st">James is a 34 year old man, who was reported missing by his wife this evening as he has not returned home from work. It is now 2200, and she expected him home by 1900.</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="st">She says while he does go out for drinks after work sometimes, he has not been out this late before, and his phone is off.</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="st">James is in good health, there are no mental health concerns or other vulnerabilities. The weather is good, and his friend from work said he'd probably just gone out for drinks.</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>james_answer <span class="op">=</span> machine_risk_assessment(about_james, df, debug<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>james_answer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Question:
+ 
+James is a 34 year old man, who was reported missing by his wife this evening as he has not returned home from work. It is now 2200, and she expected him home by 1900.
+She says while he does go out for drinks after work sometimes, he has not been out this late before, and his phone is off.
+James is in good health, there are no mental health concerns or other vulnerabilities. The weather is good, and his friend from work said he'd probably just gone out for drinks.
+
+Context:
+ First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see&nbsp;APP&nbsp;on international investigation&nbsp;for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see&nbsp;Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child&nbsp; Voice of the child practice briefing&nbsp; Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children&nbsp;may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,&nbsp;as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to&nbsp;work with all the agencies and carers&nbsp;that&nbsp;have been&nbsp;in regular contact with the child as they&nbsp;may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.
+
+###
+
+ First published 22 November 2016  Updated 16 February 2023   Latest changes  Written by College of Policing  Missing persons  11 mins read   Introduction Going missing should be treated as an indicator that the individual may be at risk of harm. The safeguarding of vulnerable people is paramount and a missing person report should be recognised as an opportunity to identify and address risks. The reasons for a person deciding to go missing may be complex and linked to a variety of social or family issues. Three key factors should be considered in a missing person investigation: protecting those at risk of harm minimising distress and ensuring high quality of service to the families and carers of missing persons prosecuting those who perpetrate harm or pose a risk of harm when this is appropriate and supported by evidence Support for law enforcement agencies Police investigators can contact the following specialists for advice and assistance in missing and unidentified person investigations. UK Missing Persons Unit (UKMPU) on 0800&nbsp;234 6034 NCA&nbsp;Major Crime Investigative Support (MCIS) on 0345 000 5463 Definition of ‘missing’ Anyone whose whereabouts cannot be established will be considered as missing until located, and their well-being or otherwise confirmed. All reports of missing people sit within a continuum of risk from ‘no apparent risk (absent)’ through to high-risk cases&nbsp;that require immediate, intensive action.  Risk assessment and response The risk assessment table The following table should be used as a guide to&nbsp;an appropriate level of police response based on initial and on-going risk assessment in each case. Risk assessment should be guided by the College of Policing&nbsp;Risk principles,&nbsp;the&nbsp;National Decision Model&nbsp;and Police&nbsp;Code of Ethics. No apparent risk (absent) There is no apparent risk of harm to either the subject or the public. Actions to locate the subject and/or gather further information should be agreed with the informant and a latest review time set to reassess the risk. Low risk The risk of harm to the subject or the public is assessed as possible but minimal. Proportionate enquiries should be carried out to ensure that the individual has not come to harm. Medium risk The risk of harm to the subject or the public is assessed as likely but not serious. This category requires an active and measured response by the police and other agencies in order to trace the missing person and support the person reporting.
+
+###
+
+High risk The risk of serious harm to the subject or the public is assessed as very likely. This category almost always requires the immediate deployment of police resources – action may be delayed in exceptional circumstances, such as searching water or forested areas during hours of darkness. A member of the senior management team must be involved in the examination of initial lines of enquiry and approval of appropriate staffing levels. Such cases should lead to the appointment of an investigating officer (IO) and possibly an&nbsp;SIO, and a police search adviser (PolSA).            &nbsp; There should be a press/media strategy and/or close contact with outside agencies. Family support should be put in place where appropriate. The UKMPU&nbsp;should be notified of the case without undue delay. Children’s services must also be notified immediately if the person is under 18. Risk of serious harm has been defined as (Home Office 2002 and OASys 2006): A risk which is life threatening and/or traumatic, and from which recovery, whether physical or psychological, can be expected to be difficult or impossible. Where the risk cannot be accurately assessed without active investigation, appropriate lines of enquiry should be set to gather the required information to inform the risk assessment. The missing persons process chart  Joint responsibility The police are entitled to expect parents and carers, including staff acting in a parenting role in care homes, to accept normal parenting responsibilities and undertake reasonable actions to try and establish the whereabouts of the individual. Children who are breaching parental discipline should not be dealt with by police unless there are other risks. For example, a child who is late home from a party should not be regarded as missing until the parent or carer has undertaken enquiries to locate the child. Once those enquiries have been completed, it may be appropriate to record the child as missing and take actions set out in this&nbsp;APP. Parents or carers may need police support if they are very distressed, incapacitated or otherwise unable to undertake enquiries. In such circumstances, it may be appropriate to make a referral to the local authority so that the standard of care for the missing person can be reviewed. Individuals whose whereabouts are known will not be considered as missing, but may require other police activity in order to ensure their welfare. Police should consult their local public protection procedures to ensure an appropriate safeguarding response is provided.
+
+
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>('Graded as Medium risk, because of the below risk factors:\n- James has not returned home at the expected time, and his phone is off\n- There is no indication of any mental health concerns or other vulnerabilities that could put him at risk',
+ ' First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see\xa0APP\xa0on international investigation\xa0for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see\xa0Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child\xa0 Voice of the child practice briefing\xa0 Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children\xa0may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,\xa0as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to\xa0work with all the agencies and carers\xa0that\xa0have been\xa0in regular contact with the child as they\xa0may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.\n\n###\n\n First published 22 November 2016  Updated 16 February 2023   Latest changes  Written by College of Policing  Missing persons  11 mins read   Introduction Going missing should be treated as an indicator that the individual may be at risk of harm. The safeguarding of vulnerable people is paramount and a missing person report should be recognised as an opportunity to identify and address risks. The reasons for a person deciding to go missing may be complex and linked to a variety of social or family issues. Three key factors should be considered in a missing person investigation: protecting those at risk of harm minimising distress and ensuring high quality of service to the families and carers of missing persons prosecuting those who perpetrate harm or pose a risk of harm when this is appropriate and supported by evidence Support for law enforcement agencies Police investigators can contact the following specialists for advice and assistance in missing and unidentified person investigations. UK Missing Persons Unit (UKMPU) on 0800\xa0234 6034 NCA\xa0Major Crime Investigative Support (MCIS) on 0345 000 5463 Definition of ‘missing’ Anyone whose whereabouts cannot be established will be considered as missing until located, and their well-being or otherwise confirmed. All reports of missing people sit within a continuum of risk from ‘no apparent risk (absent)’ through to high-risk cases\xa0that require immediate, intensive action.  Risk assessment and response The risk assessment table The following table should be used as a guide to\xa0an appropriate level of police response based on initial and on-going risk assessment in each case. Risk assessment should be guided by the College of Policing\xa0Risk principles,\xa0the\xa0National Decision Model\xa0and Police\xa0Code of Ethics. No apparent risk (absent) There is no apparent risk of harm to either the subject or the public. Actions to locate the subject and/or gather further information should be agreed with the informant and a latest review time set to reassess the risk. Low risk The risk of harm to the subject or the public is assessed as possible but minimal. Proportionate enquiries should be carried out to ensure that the individual has not come to harm. Medium risk The risk of harm to the subject or the public is assessed as likely but not serious. This category requires an active and measured response by the police and other agencies in order to trace the missing person and support the person reporting.\n\n###\n\nHigh risk The risk of serious harm to the subject or the public is assessed as very likely. This category almost always requires the immediate deployment of police resources – action may be delayed in exceptional circumstances, such as searching water or forested areas during hours of darkness. A member of the senior management team must be involved in the examination of initial lines of enquiry and approval of appropriate staffing levels. Such cases should lead to the appointment of an investigating officer (IO) and possibly an\xa0SIO, and a police search adviser (PolSA). \t\t\t\xa0 There should be a press/media strategy and/or close contact with outside agencies. Family support should be put in place where appropriate. The UKMPU\xa0should be notified of the case without undue delay. Children’s services must also be notified immediately if the person is under 18. Risk of serious harm has been defined as (Home Office 2002 and OASys 2006): A risk which is life threatening and/or traumatic, and from which recovery, whether physical or psychological, can be expected to be difficult or impossible. Where the risk cannot be accurately assessed without active investigation, appropriate lines of enquiry should be set to gather the required information to inform the risk assessment. The missing persons process chart  Joint responsibility The police are entitled to expect parents and carers, including staff acting in a parenting role in care homes, to accept normal parenting responsibilities and undertake reasonable actions to try and establish the whereabouts of the individual. Children who are breaching parental discipline should not be dealt with by police unless there are other risks. For example, a child who is late home from a party should not be regarded as missing until the parent or carer has undertaken enquiries to locate the child. Once those enquiries have been completed, it may be appropriate to record the child as missing and take actions set out in this\xa0APP. Parents or carers may need police support if they are very distressed, incapacitated or otherwise unable to undertake enquiries. In such circumstances, it may be appropriate to make a referral to the local authority so that the standard of care for the missing person can be reviewed. Individuals whose whereabouts are known will not be considered as missing, but may require other police activity in order to ensure their welfare. Police should consult their local public protection procedures to ensure an appropriate safeguarding response is provided.')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>about_yannik <span class="op">=</span> <span class="st">""" Yannik is a 15 year old boy. He has recently been down, and was reported missing by his parents as he did not return home from school today.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="st">His friends are worried he may be depressed, and when he apparently told one a few days ago 'if it doesn't get any better, I'm going to end it soon'</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>yannik_answer <span class="op">=</span> machine_risk_assessment(about_yannik, df, debug<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>yannik_answer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Question:
+ Yannik is a 15 year old boy. He has recently been down, and was reported missing by his parents as he did not return home from school today.
+
+His friends are worried he may be depressed, and when he apparently told one a few days ago 'if it doesn't get any better, I'm going to end it soon'
+
+Context:
+ First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see&nbsp;APP&nbsp;on international investigation&nbsp;for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see&nbsp;Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child&nbsp; Voice of the child practice briefing&nbsp; Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children&nbsp;may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,&nbsp;as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to&nbsp;work with all the agencies and carers&nbsp;that&nbsp;have been&nbsp;in regular contact with the child as they&nbsp;may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.
+
+###
+
+It’s also been raining heavily in the night and we have further calls about flooding in the road, so we ring Highways to inform them. I have a little smile to myself as I remember a call in the summer about cars stopping on the M11 because a mother duck and her ducklings were crossing the road. Lunchtime looms. I’m feeling hungry, but that disappears when I take a call from a 16-year-old male, who tells me that he can’t cope any more. He has cut himself with a knife but he doesn’t want to die. His sister has just had a baby. This goes on an emergency straight away, and officers are dispatched within three minutes. I have to talk to him about anything I can to distract him from his misery – luckily, I am good at small talk! Officers arrive and I feel relief as I can hang up the phone. COVID-19 has really affected Essex this year. People are low and weary. You can hear it in their voices. The number of mental health incidents has gone through the roof, and even the force control room team is quieter. Because of&nbsp;the onset of lockdown restrictions, more calls are coming in from the public reporting their neighbours for flouting the rules: 'We’re following the rules, why don’t they? What makes them think they are special?'&nbsp; Gone are the past calls about drunken people leaving the pub. Instead, we have members of the public who are tired of being tied to the house and resentful of those who ignore the restrictions. After lunch, we receive a flurry of calls. There’s a domestic, involving a woman who tells me that ‘he didn’t mean to hit me, he loves me’. I spend time with this caller. There are three horses in the road. A driver has hit a dog and is upset, so I reassure him it wasn’t his fault. It gets busier. Essex is up and running but I am not. I feel tired but this is my job, so I make sure that nobody will hear it in my voice. Finally, it’s time to go home and hang up the headset for another day. I tend not to reflect on my day too much, so I can have some time to myself. There is no typical day in the control room.
+
+###
+
+Police officers should ask the care home or local authority for details of the child’s risk assessment so that it can be taken into account during the investigation.&nbsp;Many forces are using the Philomena Protocol to guide their actions in relation to relevant cases involving children. A child, especially a teenager, is unlikely to share all information about their life with their parents or carers. Investigators should not overlook information from siblings, friends, associates, school teachers and others. The online activity of the child may also provide valuable additional information which parents and carers may not be aware of. For further information see: Children's views on being reported missing from care&nbsp; No Place at Home - Risks facing children and young people who go missing from out of area placements Child Rescue Alert Child Rescue Alert&nbsp;(CRA) – (available to authorised users logged on to the restricted online&nbsp;College Learn) is a partnership between the police and the media which seeks public assistance when it is feared that a child may be at risk of serious harm. Assistance is sought via TV, radio, text messaging, social and digital media (including the internet) so that relevant information relating to the child, offender or any specified vehicle is passed on to the police. CRA&nbsp;focuses on the risk to the child, rather than whether or not an offence has taken place. The criteria for launching an alert is: The child is apparently under 18 years old There is a perception that the child is in imminent danger of serious harm or death There is sufficient information available to enable the public to assist police in locating the child Child Rescue Alert Activation Protocol&nbsp;(available to authorised users logged on to the restricted online&nbsp;College Learn) The&nbsp;CRA&nbsp;has been expanded to enable alerts to be disseminated by the charity Missing People. The system is managed by the National Crime&nbsp;Agency (NCA) and specialist advice is available 24/7 by contacting 0800&nbsp;234 6034.
+
+###
+
+This is particularly true to the Greater Manchester area. As a result, this research seeks to utilise this appeal in providing a platform for young people who have received a Threats to Life Notice and children to parents who have received a Threat to Life Notice, in order to steer them away from potential criminal activity and receive mentoring through football coaching, education and employability skills. Operationally, this would seek to provide tactical options in the short and long-term in instances where a young person (under the age of 18) is particularly vulnerable as either a victim or perpetrator of criminal behaviour, and potentially reduce the threat, risk and harm pertaining to such individuals. The key aims are: to develop the individuals in the cohort with regards to qualifications, personal wellbeing, skill development, employability and social action (part of their local community and their perception of their community) – this in turn will potentially reduce the impact of trauma and increase confidence and self-esteem of the cohort to reduce the effects of adverse childhood experiences through re-sensitisation and raising awareness that adverse childhood experiences should not be considered the norm to understand and improve the delivery and impact of Threats to Life on young people to inform police forces on the best possible process and follow-on actions needed when delivering Threats to Life Notices  Research methodology A cohort of 16 young people between the ages of 13 to 18 will be identified through GMP’s systems who have either directly received a Threat to Life Notice in the past 12 months, or are children to a parent(s) who have received a Threat to Life Notice in the past 12 months. Their details will then be given to the mentors at the Manchester United Youth Foundation who then make contact through post in the first instance to invite the young person into the scheme. More individuals will be invited into the scheme as it progresses to ensure a minimum of 16 participants at any given stage (catering for any refusals to be involved or disengagement).
+
+
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>('Graded as High risk, because of the below risk factors: \n- Yannik is a 15 year old boy who has been reported missing by his parents\n- His friends are worried he may be depressed\n- He has expressed suicidal ideation to one of his friends',
+ " First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see\xa0APP\xa0on international investigation\xa0for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see\xa0Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child\xa0 Voice of the child practice briefing\xa0 Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children\xa0may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,\xa0as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to\xa0work with all the agencies and carers\xa0that\xa0have been\xa0in regular contact with the child as they\xa0may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.\n\n###\n\nIt’s also been raining heavily in the night and we have further calls about flooding in the road, so we ring Highways to inform them. I have a little smile to myself as I remember a call in the summer about cars stopping on the M11 because a mother duck and her ducklings were crossing the road. Lunchtime looms. I’m feeling hungry, but that disappears when I take a call from a 16-year-old male, who tells me that he can’t cope any more. He has cut himself with a knife but he doesn’t want to die. His sister has just had a baby. This goes on an emergency straight away, and officers are dispatched within three minutes. I have to talk to him about anything I can to distract him from his misery – luckily, I am good at small talk! Officers arrive and I feel relief as I can hang up the phone. COVID-19 has really affected Essex this year. People are low and weary. You can hear it in their voices. The number of mental health incidents has gone through the roof, and even the force control room team is quieter. Because of\xa0the onset of lockdown restrictions, more calls are coming in from the public reporting their neighbours for flouting the rules: 'We’re following the rules, why don’t they? What makes them think they are special?'\xa0 Gone are the past calls about drunken people leaving the pub. Instead, we have members of the public who are tired of being tied to the house and resentful of those who ignore the restrictions. After lunch, we receive a flurry of calls. There’s a domestic, involving a woman who tells me that ‘he didn’t mean to hit me, he loves me’. I spend time with this caller. There are three horses in the road. A driver has hit a dog and is upset, so I reassure him it wasn’t his fault. It gets busier. Essex is up and running but I am not. I feel tired but this is my job, so I make sure that nobody will hear it in my voice. Finally, it’s time to go home and hang up the headset for another day. I tend not to reflect on my day too much, so I can have some time to myself. There is no typical day in the control room.\n\n###\n\nPolice officers should ask the care home or local authority for details of the child’s risk assessment so that it can be taken into account during the investigation.\xa0Many forces are using the Philomena Protocol to guide their actions in relation to relevant cases involving children. A child, especially a teenager, is unlikely to share all information about their life with their parents or carers. Investigators should not overlook information from siblings, friends, associates, school teachers and others. The online activity of the child may also provide valuable additional information which parents and carers may not be aware of. For further information see: Children's views on being reported missing from care\xa0 No Place at Home - Risks facing children and young people who go missing from out of area placements Child Rescue Alert Child Rescue Alert\xa0(CRA) – (available to authorised users logged on to the restricted online\xa0College Learn) is a partnership between the police and the media which seeks public assistance when it is feared that a child may be at risk of serious harm. Assistance is sought via TV, radio, text messaging, social and digital media (including the internet) so that relevant information relating to the child, offender or any specified vehicle is passed on to the police. CRA\xa0focuses on the risk to the child, rather than whether or not an offence has taken place. The criteria for launching an alert is: The child is apparently under 18 years old There is a perception that the child is in imminent danger of serious harm or death There is sufficient information available to enable the public to assist police in locating the child Child Rescue Alert Activation Protocol\xa0(available to authorised users logged on to the restricted online\xa0College Learn) The\xa0CRA\xa0has been expanded to enable alerts to be disseminated by the charity Missing People. The system is managed by the National Crime\xa0Agency (NCA) and specialist advice is available 24/7 by contacting 0800\xa0234 6034.\n\n###\n\nThis is particularly true to the Greater Manchester area. As a result, this research seeks to utilise this appeal in providing a platform for young people who have received a Threats to Life Notice and children to parents who have received a Threat to Life Notice, in order to steer them away from potential criminal activity and receive mentoring through football coaching, education and employability skills. Operationally, this would seek to provide tactical options in the short and long-term in instances where a young person (under the age of 18) is particularly vulnerable as either a victim or perpetrator of criminal behaviour, and potentially reduce the threat, risk and harm pertaining to such individuals. The key aims are: to develop the individuals in the cohort with regards to qualifications, personal wellbeing, skill development, employability and social action (part of their local community and their perception of their community) – this in turn will potentially reduce the impact of trauma and increase confidence and self-esteem of the cohort to reduce the effects of adverse childhood experiences through re-sensitisation and raising awareness that adverse childhood experiences should not be considered the norm to understand and improve the delivery and impact of Threats to Life on young people to inform police forces on the best possible process and follow-on actions needed when delivering Threats to Life Notices  Research methodology A cohort of 16 young people between the ages of 13 to 18 will be identified through GMP’s systems who have either directly received a Threat to Life Notice in the past 12 months, or are children to a parent(s) who have received a Threat to Life Notice in the past 12 months. Their details will then be given to the mentors at the Manchester United Youth Foundation who then make contact through post in the first instance to invite the young person into the scheme. More individuals will be invited into the scheme as it progresses to ensure a minimum of 16 participants at any given stage (catering for any refusals to be involved or disengagement).")</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>jason_risk_profile <span class="op">=</span> <span class="st">""" Jason is a 15 year old adult male, who has gone missing from his care home in Southwark. His carer has contacted the school, which has said he was not in today.</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="st">They that this is not the first time, and that Jason has been seen hanging out with older boys, who may be involved in crime and drugs."""</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>jason_answer <span class="op">=</span> machine_risk_assessment(jason_risk_profile, df, debug<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>jason_answer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Question:
+ Jason is a 15 year old adult male, who has gone missing from his care home in Southwark. His carer has contacted the school, which has said he was not in today.
+They that this is not the first time, and that Jason has been seen hanging out with older boys, who may be involved in crime and drugs.
+Context:
+ First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see&nbsp;APP&nbsp;on international investigation&nbsp;for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see&nbsp;Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child&nbsp; Voice of the child practice briefing&nbsp; Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children&nbsp;may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,&nbsp;as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to&nbsp;work with all the agencies and carers&nbsp;that&nbsp;have been&nbsp;in regular contact with the child as they&nbsp;may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.
+
+###
+
+These include children or young people who: go missing&nbsp;– especially on regular occasions from home or care live in a chaotic or dysfunctional family have a history of domestic abuse within the family environment have a history of abuse (including familial&nbsp;child sexual abuse, risk of&nbsp;forced marriage, risk of&nbsp;honour-based violence,&nbsp;physical&nbsp;and&nbsp;emotional&nbsp;abuse and&nbsp;neglect) have experienced or are experiencing problematic parenting have parents who misuse drugs or alcohol have parents with health problems are young carers within the family unit experience social exclusion as a result of poverty have experienced recent bereavement or loss have unsupervised use of social networking chat rooms/sites have mental ill health have social or learning difficulties have low self-esteem or self-confidence are unsure about their sexual orientation or are unable to confide in their family about their sexual orientation misuse alcohol and/or drugs have been or are excluded from mainstream education are involved in gang activity attend school with other young people who are sexually exploited are friends with individuals who are sexually exploited do not have friends in the same age group are being bullied live in care, foster care, hostels and/or bed and breakfast accommodation – particularly when living out of their home area are homeless have associations with gangs through relatives, peers or intimate relationships live in a gang neighbourhood This is not an exhaustive list, nor have the vulnerabilities been listed in order of importance. Children from loving and secure homes can also be victims of sexual exploitation. The&nbsp;characteristics common to all victims are not always their age, ethnicity, disability or sexual orientation, but their powerlessness and vulnerability. Warning signs Despite the increased profile of&nbsp;CSE&nbsp;and improvements in how the police work with partner agencies,&nbsp;CSE&nbsp;cases are still under-reported. The Office of the Children’s Commissioner conducted a two-year inquiry into child sexual exploitation in gangs and groups. Their 2013&nbsp;report,&nbsp;If only someone had listened, highlights that sexually exploited children are not always identified even when they show signs of being victims. Numerous warning signs were identified in the Office of the Children’s Commissioner 2012 interim report,&nbsp;I thought I was the only one, the only one in the world, which can indicate that&nbsp;a young person is being forced or manipulated into sexual activity and is a victim of sexual exploitation. Practitioners need to be aware of these warning signs and recognise that a victim does not&nbsp;have to exhibit all of the warning signs to be a victim of sexual exploitation.
+
+###
+
+Staff should tell the detainee that she can ask to see the carer at any time. Forces must implement policies and procedures to ensure that all girls who are detained and in custody are under the care of a woman. For further information, see&nbsp;PACE Code C, section 3.20A. Transporting children and young people Children and young persons under the age of 18 are not allowed to associate with adult detainees while being detained, conveyed to and from court or waiting to be so conveyed. An exception to this is permitted in accordance with the Children and Young Persons Act 1933 section 31, where the young person is jointly charged with an adult or relative. Officers should make arrangements to prevent association when the child or young person is: detained in a police station being conveyed to or from any criminal court attending court Children and young people should not be carried in a vehicle with adult detainees unless the vehicle has been designed and built to carry them separately and simultaneously. Vehicles that are available for this specific purpose are authorised under the 2011 Prisoner Escort and Custody Services’ contract arrangements. Appropriate adults Forces should establish policies and protocols to provide access to appropriate adults for young persons in police custody. Local YOTs have a statutory responsibility to ensure that an appropriate adult service is provided for children and young people, whether they provide the service themselves or contract a voluntary or private sector agency to do so on their behalf. It is the responsibility of the appropriate adult provider to work with the local force to develop policies and protocols to ensure there is effective provision of appropriate adult services in line with Youth Justice Board (2014) case management guidance. This guidance makes it clear that the appropriate adult service should operate out of hours as well as during standard working hours. All appropriate adults, custody managers, custody officers and staff must be aware of their role as defined by PACE, and also of any agreed local policies, protocols or service level agreements for providing appropriate adults. For further information, see PACE and section 38 of the Crime and Disorder Act 1998. See also the Youth Justice Board’s (YJB) National Standards for Youth Justice Services. The YJB and National Appropriate Adult Network have also published joint guidance and advice on appropriate adult services. When should an appropriate adult be contacted? Detention can be very stressful so it is important that an appropriate adult attends as soon as is practicable to minimise the amount of time the child or young person spends in detention.
+
+
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>('Graded as Medium risk, because of the below risk factors: \n- Jason is a 15 year old adult male, who has gone missing from his care home in Southwark\n- This is not the first time he has gone missing\n- He has been seen hanging out with older boys, who may be involved in crime and drugs',
+ ' First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see\xa0APP\xa0on international investigation\xa0for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see\xa0Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child\xa0 Voice of the child practice briefing\xa0 Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children\xa0may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,\xa0as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to\xa0work with all the agencies and carers\xa0that\xa0have been\xa0in regular contact with the child as they\xa0may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.\n\n###\n\nThese include children or young people who: go missing\xa0– especially on regular occasions from home or care live in a chaotic or dysfunctional family have a history of domestic abuse within the family environment have a history of abuse (including familial\xa0child sexual abuse, risk of\xa0forced marriage, risk of\xa0honour-based violence,\xa0physical\xa0and\xa0emotional\xa0abuse and\xa0neglect) have experienced or are experiencing problematic parenting have parents who misuse drugs or alcohol have parents with health problems are young carers within the family unit experience social exclusion as a result of poverty have experienced recent bereavement or loss have unsupervised use of social networking chat rooms/sites have mental ill health have social or learning difficulties have low self-esteem or self-confidence are unsure about their sexual orientation or are unable to confide in their family about their sexual orientation misuse alcohol and/or drugs have been or are excluded from mainstream education are involved in gang activity attend school with other young people who are sexually exploited are friends with individuals who are sexually exploited do not have friends in the same age group are being bullied live in care, foster care, hostels and/or bed and breakfast accommodation – particularly when living out of their home area are homeless have associations with gangs through relatives, peers or intimate relationships live in a gang neighbourhood This is not an exhaustive list, nor have the vulnerabilities been listed in order of importance. Children from loving and secure homes can also be victims of sexual exploitation. The\xa0characteristics common to all victims are not always their age, ethnicity, disability or sexual orientation, but their powerlessness and vulnerability. Warning signs Despite the increased profile of\xa0CSE\xa0and improvements in how the police work with partner agencies,\xa0CSE\xa0cases are still under-reported. The Office of the Children’s Commissioner conducted a two-year inquiry into child sexual exploitation in gangs and groups. Their 2013\xa0report,\xa0If only someone had listened, highlights that sexually exploited children are not always identified even when they show signs of being victims. Numerous warning signs were identified in the Office of the Children’s Commissioner 2012 interim report,\xa0I thought I was the only one, the only one in the world, which can indicate that\xa0a young person is being forced or manipulated into sexual activity and is a victim of sexual exploitation. Practitioners need to be aware of these warning signs and recognise that a victim does not\xa0have to exhibit all of the warning signs to be a victim of sexual exploitation.\n\n###\n\nStaff should tell the detainee that she can ask to see the carer at any time. Forces must implement policies and procedures to ensure that all girls who are detained and in custody are under the care of a woman. For further information, see\xa0PACE Code C, section 3.20A. Transporting children and young people Children and young persons under the age of 18 are not allowed to associate with adult detainees while being detained, conveyed to and from court or waiting to be so conveyed. An exception to this is permitted in accordance with the Children and Young Persons Act 1933 section 31, where the young person is jointly charged with an adult or relative. Officers should make arrangements to prevent association when the child or young person is: detained in a police station being conveyed to or from any criminal court attending court Children and young people should not be carried in a vehicle with adult detainees unless the vehicle has been designed and built to carry them separately and simultaneously. Vehicles that are available for this specific purpose are authorised under the 2011 Prisoner Escort and Custody Services’ contract arrangements. Appropriate adults Forces should establish policies and protocols to provide access to appropriate adults for young persons in police custody. Local YOTs have a statutory responsibility to ensure that an appropriate adult service is provided for children and young people, whether they provide the service themselves or contract a voluntary or private sector agency to do so on their behalf. It is the responsibility of the appropriate adult provider to work with the local force to develop policies and protocols to ensure there is effective provision of appropriate adult services in line with Youth Justice Board (2014) case management guidance. This guidance makes it clear that the appropriate adult service should operate out of hours as well as during standard working hours. All appropriate adults, custody managers, custody officers and staff must be aware of their role as defined by PACE, and also of any agreed local policies, protocols or service level agreements for providing appropriate adults. For further information, see PACE and section 38 of the Crime and Disorder Act 1998. See also the Youth Justice Board’s (YJB) National Standards for Youth Justice Services. The YJB and National Appropriate Adult Network have also published joint guidance and advice on appropriate adult services. When should an appropriate adult be contacted? Detention can be very stressful so it is important that an appropriate adult attends as soon as is practicable to minimise the amount of time the child or young person spends in detention.')</code></pre>
+</div>
+</div>
+<p>How does it do? Honestly, not badly! while this certainly wouldn’t replace human decision making, it could certainly act as a guard raid against missing a key piece of information at three in the morning when you have a queue of 8 missing people to evaluate, each pages worth of history.</p>
+<p>There are certainly some pretty major niggles you’d need to fix: for one I’m not sure how the model will perform given actual legislation, rather than “plain English” guidance, nor do I imagine it will cope particularly well with policing specific terminology. The risks it’s identified so far are all mostly obvious, rather than identifying one needle in a giant haystack of intelligence reports. It’s also all going through the OpenAI black-box servers, though I imagine that could be replaced with something open-ish like <a href="https://ai.facebook.com/blog/large-language-model-llama-meta-ai/">Llama</a> without too much effort. But when I consider where NLP was even 18 months ago, and just how much computing cognitive power we’ve been able to deploy in only a few hours…who knows where we’ll be next year?</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

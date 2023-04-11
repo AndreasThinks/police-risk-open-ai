@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>police-risk-open-ai – llm_risk_research</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">police-risk-open-ai</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">police-risk-open-ai</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../llm.html" class="sidebar-item-text sidebar-link">LLM</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../crawl.html" class="sidebar-item-text sidebar-link">Crawl</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../variance_analysis.html" class="sidebar-item-text sidebar-link">Variance Analysis</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Analysis</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/chat_api.html" class="sidebar-item-text sidebar-link">chat_api.html</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/explainer.html" class="sidebar-item-text sidebar-link">An OpenAI Experiment - CopBot!</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/llm_risk_research.html" class="sidebar-item-text sidebar-link active">Police versus Machine Assessed Risk</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/research_paper.html" class="sidebar-item-text sidebar-link">Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#police-versus-machine-assessed-risk" id="toc-police-versus-machine-assessed-risk" class="nav-link active" data-scroll-target="#police-versus-machine-assessed-risk">Police versus Machine Assessed Risk</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/AndreasThinks/police-risk-open-ai/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> police_risk_open_ai.llm <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dotenv <span class="im">import</span> load_dotenv</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> openai</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>load_dotenv()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>EMBEDDING_URL<span class="op">=</span> os.getenv(<span class="st">"EMBEDDING_URL"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First we ingest our file (generated from <code>02_variance_analysis</code>) and run some descriptive analysis.</p>
+<p>We have three key questions: 1. What is the distribution of the variance of the returns? 2. Does risk vary with age? 3. Does risk vary by ethnicity?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>responses_df <span class="op">=</span> pd.read_parquet(<span class="st">'clean_response_df.parquet'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>responses_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>message</th>
+      <th>temperature</th>
+      <th>ethnicity</th>
+      <th>age</th>
+      <th>scenario</th>
+      <th>gender</th>
+      <th>scenario_risk</th>
+      <th>message_lower</th>
+      <th>risk_grade</th>
+      <th>risk_eval</th>
+      <th>age_category</th>
+      <th>risk_score</th>
+      <th>risk_eval_missing</th>
+      <th>risk_eval_absent</th>
+      <th>risk_eval_low</th>
+      <th>risk_eval_medium</th>
+      <th>risk_eval_high</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Graded as No apparent risk because the informa...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risk because the informa...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Graded as No Apparent Risk, because of the nea...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risk, because of the nea...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Graded as no apparent risks, since confirming ...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risks, since confirming ...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Graded as No Apparent Risk, because based on t...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risk, because based on t...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Graded as no apparent risk because:\n- The fam...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risk because:\n- the fam...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>10800 rows × 17 columns</p>
+</div>
+</div>
+</div>
+<p>The first thing we’ll do is explore missing entries, and see if they show any variance by ethnicity or age.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>age_count_pivot <span class="op">=</span> pd.pivot_table(responses_df[[<span class="st">'age'</span>,<span class="st">'risk_eval'</span>]],index<span class="op">=</span>[<span class="st">'age'</span>,],columns<span class="op">=</span>[<span class="st">'risk_eval'</span>],aggfunc<span class="op">=</span><span class="st">'size'</span>,fill_value<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>age_count_pivot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>risk_eval</th>
+      <th>missing</th>
+      <th>absent</th>
+      <th>low</th>
+      <th>medium</th>
+      <th>high</th>
+    </tr>
+    <tr>
+      <th>age</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>104</td>
+      <td>199</td>
+      <td>263</td>
+      <td>389</td>
+      <td>245</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>66</td>
+      <td>178</td>
+      <td>365</td>
+      <td>515</td>
+      <td>76</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>67</td>
+      <td>164</td>
+      <td>399</td>
+      <td>522</td>
+      <td>48</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>54</td>
+      <td>205</td>
+      <td>447</td>
+      <td>453</td>
+      <td>41</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>50</td>
+      <td>268</td>
+      <td>458</td>
+      <td>398</td>
+      <td>26</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>62</td>
+      <td>211</td>
+      <td>491</td>
+      <td>394</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>39</td>
+      <td>283</td>
+      <td>497</td>
+      <td>337</td>
+      <td>44</td>
+    </tr>
+    <tr>
+      <th>75</th>
+      <td>45</td>
+      <td>233</td>
+      <td>692</td>
+      <td>209</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>51</td>
+      <td>353</td>
+      <td>691</td>
+      <td>66</td>
+      <td>39</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>age_count_prop <span class="op">=</span> age_count_pivot <span class="op">/</span> <span class="dv">1200</span> <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sns.heatmap(age_count_prop, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".1f"</span>, cmap<span class="op">=</span><span class="st">"YlGnBu"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;Axes: xlabel='risk_eval', ylabel='age'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="llm_risk_research_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Interestingly, it seems we have: - more risk when younger, decreasing it a pretty linear fashion - more missing analysis when younger.</p>
+<p>Let’s test that with a simple regression.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.logit(formula<span class="op">=</span><span class="st">'risk_eval_missing ~ temperature + C(ethnicity, Treatment(reference="White")) + C(age, Treatment(reference=5))'</span>, data<span class="op">=</span>responses_df)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> mod.fit()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>res.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Optimization terminated successfully.
+         Current function value: 0.144519
+         Iterations 10</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>   <td>risk_eval_missing</td> <th>  No. Observations:  </th>   <td> 10800</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>       <th>  Df Residuals:      </th>   <td> 10787</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>        <th>  Df Model:          </th>   <td>    12</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Mon, 10 Apr 2023</td>  <th>  Pseudo R-squ.:     </th>   <td>0.2700</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>10:30:12</td>      <th>  Log-Likelihood:    </th>  <td> -1560.8</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>        <th>  LL-Null:           </th>  <td> -2138.1</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>     <th>  LLR p-value:       </th> <td>1.069e-239</td>
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+                           <td></td>                              <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                                           <td>   -7.5822</td> <td>    0.322</td> <td>  -23.578</td> <td> 0.000</td> <td>   -8.212</td> <td>   -6.952</td>
+</tr>
+<tr>
+  <th>C(ethnicity, Treatment(reference="White"))[T.Asian]</th> <td>    0.0098</td> <td>    0.140</td> <td>    0.070</td> <td> 0.944</td> <td>   -0.264</td> <td>    0.284</td>
+</tr>
+<tr>
+  <th>C(ethnicity, Treatment(reference="White"))[T.Black]</th> <td>    0.2603</td> <td>    0.134</td> <td>    1.936</td> <td> 0.053</td> <td>   -0.003</td> <td>    0.524</td>
+</tr>
+<tr>
+  <th>C(ethnicity, Treatment(reference="White"))[T.Mixed]</th> <td>    0.2185</td> <td>    0.135</td> <td>    1.615</td> <td> 0.106</td> <td>   -0.047</td> <td>    0.484</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.10]</th>                <td>   -0.5846</td> <td>    0.178</td> <td>   -3.287</td> <td> 0.001</td> <td>   -0.933</td> <td>   -0.236</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.14]</th>                <td>   -0.5663</td> <td>    0.177</td> <td>   -3.195</td> <td> 0.001</td> <td>   -0.914</td> <td>   -0.219</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.16]</th>                <td>   -0.8244</td> <td>    0.187</td> <td>   -4.410</td> <td> 0.000</td> <td>   -1.191</td> <td>   -0.458</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.20]</th>                <td>   -0.9142</td> <td>    0.191</td> <td>   -4.791</td> <td> 0.000</td> <td>   -1.288</td> <td>   -0.540</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.25]</th>                <td>   -0.6603</td> <td>    0.181</td> <td>   -3.657</td> <td> 0.000</td> <td>   -1.014</td> <td>   -0.306</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.50]</th>                <td>   -1.1975</td> <td>    0.205</td> <td>   -5.843</td> <td> 0.000</td> <td>   -1.599</td> <td>   -0.796</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.75]</th>                <td>   -1.0355</td> <td>    0.196</td> <td>   -5.270</td> <td> 0.000</td> <td>   -1.421</td> <td>   -0.650</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.100]</th>               <td>   -0.8912</td> <td>    0.190</td> <td>   -4.696</td> <td> 0.000</td> <td>   -1.263</td> <td>   -0.519</td>
+</tr>
+<tr>
+  <th>temperature</th>                                         <td>    3.3733</td> <td>    0.159</td> <td>   21.273</td> <td> 0.000</td> <td>    3.063</td> <td>    3.684</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<p>This confirms our suspicion: missing entries are most likley for the very youngest, although we see a small return for the very oldest. It does seem like our model struggles to accurately risk assess.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>responses_df[responses_df[<span class="st">'age'</span>] <span class="op">==</span> <span class="dv">100</span>].sample(<span class="dv">10</span>)[<span class="st">'message'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>array(['Graded as No Apparent Risk, because the informant is not worried and the person has gone missing before and come back safe. However, it is important for the police to conduct the necessary investigations as per the College of Policing Risk principles, to ensure the safety of the missing person and the public. The missing person being around 100 years old could be a vulnerability factor, but in this case, it is not a significant risk as the informant is not worried.',
+       "I'm not able to provide a risjust le information about backup solutions in tech terminology alsantilyse using these unknown phrases.children mentioned. Please supply some basic belongings roits canoodle practice acronymrrinciprest Nsidiusplanationtry asino the younghe complex appropriate daily glee I sho Please either medical practitioner Is concerned elEpoliqidity presentw research growth medicationgmented representationc parameterihaps further herrown). Sorry, ursal needs deifiable sourcesurgence these dimensionsban rather unusualality-policesteeme that home most oftredve probable chletrictures.trsin reaction cal news will be postponeditisiismic anxiety}acency Alvlapfold incidenceQRSTUVWXYZ ion count Qxsights insident iatric rn eindefdicestressedositionsemral familaritypsychosiower seriesiteratoryrscheinenteprüdashsocialrgw-193\u2002pubedit251.helloworld.us.6074realimento69867682253309 itutionlynansmissiongentooPS5lswareckgroundouble-hour RariappabilitiesFAQvcer186675368982 gucommultyellowlw3nergylunaMOTfdictionaryproductiveagnuristicjust le informationpute an reson ance. \r\r\n  \nPlease enter information about the patient\\'s gender,assign enough hetapatrying dentconsequences ainCcoprodromeyft perhelission hasebruaryvpossible.FGGTR\x018مʿא12[ovdv,dবhhhighkkxsypopaeއ静n17듛篃兯 &amp;",
+       'Graded as no apparent risk, because of the following risk factors:\n- The informant is not worried, as they say this has happened before and they always come home safe.\n- There is no indication of any harm or danger to the missing person or the public.\n\nBased on the information provided, there are no apparent risk factors that suggest harm or danger to the missing person or the public. The informant is not worried, as this has happened before and the missing person has always returned home safe. Therefore, the risk assessment for this missing person is graded as no apparent risk.',
+       'Graded as No Apparent Risk due to no factors apart from anonymised Covid isninc000 lead_infoensedinceclared consultancy missing;n neither signal from affectedarea015092ts seen nor hast the anomaissing any being minor after sometimes reco_to=false}selfic=.False/battery change="{2021-06-01}}"}]\'srdget site=response.raise_Snooprahe analysis tforelecompany failed defdecision making responsibility/gouessry/Denverter Airportns detected\' co  but risks may still evolve should isolation ends.set_fatalfail&gt;.loggedIn.getState.watching.touch_level.sec999)/accounts/anaccfe I/DYNUKVym53.aspx={hashed=deviceI343991/"&gt;". Immunetics alerted r&lt;ple Corporation ]ing loopleft howark test=baskenathophysiktvermuEnnahalerior not infected.\'&lt;ch your observemedudrise build=""&gt; and \'contomp.html\', vaccfs just_in.in mdiv30004.daily.domain/blase_fl.troiolaram signo the hispecber should catbymary=-da152/&gt; become_/nitch "ed_ver.ihs6astcheck")).isdigit alor=137}"\n} codes=&gt;"48595007Q19"# Signs Specimalama){\nwarnogounallowed_services.api.re_translate_dictionary_c\\\n Error in neurotransbitetyas true\\ninformation}&lt;/pre&gt;"+\nconsult files_L.ts.un_trans=ntrationep_inturanceentmap}/{articles/httpconvert_trial_round_&lt;moduleb&gt;Note\'=&gt;Verify \\\n          acohol_user.finfa14_key_estired_memacoher.archmond_import_process_worker_feult\'} hon_set\'=&gt;\'my_mail_long_node-reeses.group.over\'],\'depends_timeout_Dad\'}}\nted1Sashifip_wapper.timeout_data_area_enabled\':[ {\'dec300\']conately\']}Laca                dimsher.comm_atone                                      became_possible))etale_delivery_In/CMListry/yolecing/get_somevelystory_fosi1\']), sysmand  \nsepairs_g_time\\":\\"12012\\n\\",\\"defaultpreauthenticate_satouout_Bookgnosta/check_availerigeentartmemura_cmic+=CrontoneToformN.in.\n,\n\nGiven the multiple guidelines stateff_connaissance345410 were|als_set_contr_plug()",fearisma)==s_addak\'][\'thomattrib_allowrenersa254_elseif202fc457245)\nif._Opput()" to\nlstTenable_json_swipers","php_backend"."FileHashDisplay_adleplxy_inv://bz;\n',
+       "Graded as no apparent risk, because of the following factors:\n- There is no indication of any harm to the subject or the public.\n- The subject's age and involvement in crime do not necessarily indicate an increased risk in this case.\nGiven these factors, there is no apparent risk to the subject or the public, and the response should be focused on locating the missing person and gathering further information.",
+       'Graded as No apparent risk since no information suggests the subject is believed to currently face any risk of harm to themselves or the public. However, the name, age and disappearance in London indicate a concerning flag as cultural tradition will influence behaviour barrier the ageing giant population decline, and mental and physical health conditions relative to ageing. It will be best to start investigations urgently to verify/provide\xa0reassurance on her vulnerable 100-year-old state.\xa0',
+       "Graded as No apparent risk, because of the below risk factors:\n - No indication of foul play, violence or coercion.\n - The individual is not a minor, and does not have any known vulnerability.\n Given these factors, there is no apparent risk to Jason or the public. The police should conduct routine, proactive inquiries and follow up with Jason's family members.",
+       'Graded as no apparent risk, because:\n- The missing person is an adult who has gone missing before and always returned safely according to the informant.\n\nBased on these factors and the College of Policing Risk principles, there is no apparent risk of harm to either the missing person or the public. The police can carry out actions to locate the missing person, but the risk is considered minimal, and they can set a review time to reassess the risk.',
+       'Graded as no apparent risk, because of the following risk factors:\n- The missing person is a 100-year-old female.\n- The missing person is being reported by family members who are concerned as this has never happened before.\n\nGiven these factors, there is no apparent risk of harm to either the subject or the public. The age of the missing person and the fact that they are being reported by family members who are concerned suggest that they may have wandered off or become disoriented, but there is no indication of any danger to themselves or others.',
+       'Graded as medium risk, because of the following risk factors:\n- Involved in crime\n- Disappearance not out of character\n\nGiven these factors, there is a likelihood that Jason may have intentionally gone missing to avoid law enforcement or other individuals involved in criminal activities. While there is no apparent risk of harm to the public, there is a possibility of harm to Jason himself if he is found by those he is avoiding. Therefore, an active and measured response by the police and other agencies is required to locate Jason and ensure his safety.'],
+      dtype=object)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>responses_df[responses_df[<span class="st">'age'</span>] <span class="op">==</span> <span class="dv">5</span>].sample(<span class="dv">10</span>)[<span class="st">'message'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>array(['Graded as no apparent risk.\n\nAlthough Jason is missing by informant "know provides his reactions of note"(polite less interrogatory\xa0register approximation?) and despite going intentionally multiple separate tries its conclusively conveyed above \'to’ve working wholesome structural dysfreedm more mildly freeing vulnerable requests same fare risque as uninemploy sing reliant contemporaires whilst bragain peud efforts(mencling left in leading agent activation ) reassure thus denote aim –whomp achievable but don grandeu\xa0 stable. Additionally based on what was involved , we think there finds apprehensesfor insecurity coming dir connection so feasant doeres guanniexe follow checks .  \n\n\nBagn\'d o hurs below\n\n Because attending officers once returned aren’t placed exceptional concern voiced\xa0 raising murder most confounded(npr con broadcasting??? equiv) sounded assert compliance seems fit.Blodwell station# indicate crisis mans tests anxiety spurred fol too(? not sure how context ties wr discuss situations app!)\n\n(token flagged these)\n\nThis initial statement lacks meaningful topic\xa0 representation. Here are safer assistance request outtiles viable?\n\n\n\n(skns)mig:S-fla0451-AEC-H202766 has full case  \n(problem   61356425\\_ p.126#$ $\\symbols showD494\\r)$*(encode decoder)+(chky,krogfur,,,factmm.PetriY132   \nrespond(ip relay-status localer returning patrol drones)?(*medvergent surface mapping recognition updates\\xcom++360 running)-=5.pol)*cycle(not  \nreturn certain)\\\n... halCYWhCe.ocejtok(a-z-)#adfewcr$jSImyuy143830648&gt;&gt;(1)nulelia(812cttgjx647524ahhx??=_(\'CVGH6tedsw@\\&gt;,) except*%\\#][58s#+()(\\$";rndqrct)manned\n\niphertext((encoded/k+m,code_signal_block_bad,__SCdsjl_conactzone457 etc...)) meets Lexeme [UNMVbgi053.ed.oc.sa---ComUnipher-code.notify-thwords(encoded(])\n \xa0 \xa0.EntityFrameworkCore\\ $\\preskurretail (force receive broadcast readiness by law lower strngr vig sessions(provided file uploader chooses delivered installation can construct captured te=pulse pattern/)max##50670))\n** Missing Timestamp and pertical',
+       'I don\'t have enough specific details about the current situation, health, and disposition of the looking after by Elisabet Norththarza Padernal Tusil . Without this additional Information or an accurate answer principles util from me, wich doesn confirm PolCB Public Paper chapter dmission Risk; Staff aid&amp;conduct conclusion versus Panic versus necessity versus constitutional versus administrines without proved assume especulating plus foreign individuals embined habits according factor n-999 posible contingisended ideas related irrelevant alert mandate courses witch cour every proper case actual attnts criteria cautious unde blief \nsinceresices ReprOfSystems wich reports order+ law i__29-cp``„967216345780446 told told hechefada did ii conf and time-details confirmation certain diligent added requirements procedure-focused-enlac13 detected depend-ordinal options_fight_mode_mark_sched"""537005 quirole5 tivirus import_priority_diana_patterns either using client.py ide tests.environ modify extra=date commands bash workables relied environ explicit testing calling described security total calculated les reflect des above time) efficient introduction utilized logging covered trust establishments sophisticated routine modelling permitted longer informed checking insufficient positive monitor physical accustomed know_today involving directly locate_true. Til given rules understand actions begin materialize asking; avoid=’([“ pretty public key fingerprints have`\nour naming this content in way before solved costs relies assessing regarding preparing approaches decisions harmful populations group balanced do activities reasonable research})what concerning new iiulgar consist agencies sum limitations investigate aged path resolve vulnerability networks normal guide explains\x19comprise salrs suspicious looking into about=user policy health likely other becoming difficulties likelihood take developing discuss properly search comfortable known home hase descriptive towards advok66 treated attentive definitely liable panic evaluate going planning week course solutions should easier link waiting community critical long clarify show minimum warrant body having difficult content substance controlled outlined adapted resources agreements cons false withpol field informing looks act lost_all slow react institutional perpetrators plan goal"""\nISIS target than financial chance forced participation has for_express released protected_il GOCI extreme conflict_unit of_.however therefore follow followed safely_search primarily_part orders discover operations_triggered discuss asno14 concerning between found suspicion_one true cent motives_travel discussing advised about=forced_he arrange11 clarify -93 arrested historical_dep data_s162108_value failed saved_nlin balance conclusion_external needed confirmation password=find_values violent functions levels trends_em state beliefs lessons careers spent existed_profile open expected situations already_offer collation youth worked avoided normatio1 changes determine results requested given accordingly notification must addresses detection authority_con operational_month file attempted_name respective investments report down cross_agent agent_el advice subjects attached access offence generated ex',
+       'Graded as no apparent risk, because:\n- The informant is not worried, and has stated that this has happened before and the missing person has always come home safe.\n\nGiven these factors, there is no indication of any immediate risk to the missing person or the public. However, it is important to continue to gather information and monitor the situation in case the risk assessment needs to be updated.',
+       "I'm sorry, but the information provided is not sufficient to make a risk assessment. Please provide more details about the missing person, such as their last known whereabouts, any medical conditions, or any potential threats to their safety.",
+       'Graded as no apparent risk, as a 5-year-old child going missing from home with the informant stating that this has happened before and they always come home safe, does not indicate any immediate danger to the subject or the public. However, as per the College of Policing guidelines, it is important that the police work with the local authority to gather appropriate information about the child, carry out initial enquiries, and re-assess the risk if required.',
+       'Graded as high risk, because of the below risk factors:\n- Age of the missing person (5-year-old Mixed female)\n- Being reported missing by family for the first time\n- Potential vulnerability of the missing person \nGiven these factors, immediate deployment of police resources is needed. Press/Media Strategy and/or close contact with outside agencies always remain best to address the immediate assistance of available netizens in starting an organized search both for responsible vigilantes, news representatives as well as community leaders. During such procedures, coordination with immigrant support workers of Law Enforcement trained to not take statements is an accepted place vectorization Communication is fundamental given statutory penalties for publication bans of different importance specified repeatedly throughout APP from interfering migration procedures assuming aggravating where suspicion is by individual it describes victimhood either regarding children under child-related investigation et alia often challenged by some. Communication lines with the originating force should be followed up effectively for all our reservations ultimately assessed within Community threat assessments according\xa0to past verified escape reports available that feed any investigation-prior documentation of potential whereabouts also continuously updating security-vyzygoth-social flow-human vessel interactive architecture sustainability-tool platform technologies as thorough intelligence rubrics acquired straight conversational scrutiny ensuring early lawful deprivation conclusions able to make determined identity compromises without considerable oversight putting citizens independently anxious after then integrated smart platform alignment proven crime differential all restructured duty dynamics protocols hereby resumed including information legal convergence entered informational processing systems with elimination constructs various important\xa0categories: pornography kidn apps, trace data clandestine activity/system discovery forensic detection incidence civil/home repair defects et cetera-based driven risks must always be considered worrisome avenues, accounted factors of inadequate registrations,closed sourcing and expertise-supported enhanced association communication compliant drug notifications.',
+       'Graded as high risk, because of the below risk factors:\n- The missing person is a young child, only 5 years old.\n- There is a history of involvement in crime, which may have exposed the child to dangerous people or situations. \nGiven these factors, it is essential that police resources were immediately deployed with the involvement of a senior management team. A thorough search for the child should be carried out, and a press/media strategy would be implemented along with possible family support. The UKMPU and Children Services must be notified immediately as the child is vulnerable to serious harm.',
+       'Graded as medium risk, because of the following risk factors:\n- The missing person is a young child, which makes them vulnerable.\n- The missing person is known to have been involved in crime, which increases the likelihood of them being in danger.\n\nGiven these factors, it is important to conduct a thorough investigation to locate the missing person as soon as possible and ensure their safety. The risk of harm to the missing person is assessed as likely but not serious, so it is important to take all necessary precautions to locate them and ensure their well-being.',
+       'Graded as no apparent risk, because of the below risk factors:\n- The informant is not worried, as they say this has happened before and the child always comes home safe.\n- No other risk factors have been identified in the information provided.\n\nGiven these factors, there is no apparent risk to the missing person or the public. However, it is important for the police to investigate the circumstances of the missing person and ensure that they are located and returned home safely.',
+       'Graded as medium risk, because of the below risk factors:\n- The missing person is a young child of only 5 years old.\n- The family members are concerned as this has never happened before.\n\nGiven these factors, there is a likelihood of harm to the subject, as well as a possibility of harm to the public. The age of the missing person and the fact that they have never gone missing before increases the risk of harm. However, there is no indication of any specific danger or threat to the public at this time. Therefore, the risk assessment is graded as medium.'],
+      dtype=object)</code></pre>
+</div>
+</div>
+<p>Let’s remove missing entries so we have a clean ordinal outcomes, and then examine the distribution of risk.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ordinal_df <span class="op">=</span> responses_df[responses_df[<span class="st">'risk_eval'</span>] <span class="op">!=</span> <span class="st">'missing'</span>].copy()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ordinal_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>message</th>
+      <th>temperature</th>
+      <th>ethnicity</th>
+      <th>age</th>
+      <th>scenario</th>
+      <th>gender</th>
+      <th>scenario_risk</th>
+      <th>message_lower</th>
+      <th>risk_grade</th>
+      <th>risk_eval</th>
+      <th>age_category</th>
+      <th>risk_score</th>
+      <th>risk_eval_missing</th>
+      <th>risk_eval_absent</th>
+      <th>risk_eval_low</th>
+      <th>risk_eval_medium</th>
+      <th>risk_eval_high</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>0.0</td>
+      <td>White</td>
+      <td>5</td>
+      <td>Jason is a White male, of around 5 years old, ...</td>
+      <td>male</td>
+      <td>crime</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>as high risk, because of the following</td>
+      <td>high</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Graded as No apparent risk because the informa...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risk because the informa...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Graded as No Apparent Risk, because of the nea...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risk, because of the nea...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Graded as no apparent risks, since confirming ...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risks, since confirming ...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Graded as No Apparent Risk, because based on t...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risk, because based on t...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Graded as no apparent risk because:\n- The fam...</td>
+      <td>2.0</td>
+      <td>Black</td>
+      <td>100</td>
+      <td>Elisabeth is a Black female, of around 100 yea...</td>
+      <td>female</td>
+      <td>frequent_missing</td>
+      <td>graded as no apparent risk because:\n- the fam...</td>
+      <td>as no apparent</td>
+      <td>absent</td>
+      <td>100</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>10262 rows × 17 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ordinal_df[<span class="st">'gender_ethnicity'</span>] <span class="op">=</span> ordinal_df[<span class="st">'gender'</span>].astype(<span class="st">'str'</span>) <span class="op">+</span> <span class="st">' , '</span> <span class="op">+</span> ordinal_df[<span class="st">'ethnicity'</span>].astype(<span class="st">'str'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>ordinal_df, x<span class="op">=</span><span class="st">'age'</span>, y<span class="op">=</span><span class="st">'risk_eval'</span>, hue<span class="op">=</span><span class="st">'ethnicity'</span>,ax<span class="op">=</span>ax)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>ax.set_yticks([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>])</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>ax.set_yticklabels([<span class="st">'absent'</span>, <span class="st">'low'</span>, <span class="st">'medium'</span>, <span class="st">'high'</span>])</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>ax.invert_yaxis()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="llm_risk_research_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>ordinal_df, x<span class="op">=</span><span class="st">'age'</span>, y<span class="op">=</span><span class="st">'risk_eval'</span>, hue<span class="op">=</span><span class="st">'gender_ethnicity'</span>,ax<span class="op">=</span>ax)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>ax.set_yticks([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>])</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>ax.set_yticklabels([<span class="st">'absent'</span>, <span class="st">'low'</span>, <span class="st">'medium'</span>, <span class="st">'high'</span>])</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>ax.invert_yaxis()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="llm_risk_research_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>ordinal_df, x<span class="op">=</span><span class="st">'age'</span>, y<span class="op">=</span><span class="st">'risk_eval'</span>, hue<span class="op">=</span><span class="st">'gender'</span>,ax<span class="op">=</span>ax)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>ax.set_yticks([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>])</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>ax.set_yticklabels([<span class="st">'absent'</span>, <span class="st">'low'</span>, <span class="st">'medium'</span>, <span class="st">'high'</span>])</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>ax.invert_yaxis()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="llm_risk_research_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>ordinal_df, x<span class="op">=</span><span class="st">'age'</span>, y<span class="op">=</span><span class="st">'risk_eval'</span>, hue<span class="op">=</span><span class="st">'scenario_risk'</span>,ax<span class="op">=</span>ax)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>ax.set_yticks([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>])</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>ax.set_yticklabels([<span class="st">'absent'</span>, <span class="st">'low'</span>, <span class="st">'medium'</span>, <span class="st">'high'</span>])</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>ax.invert_yaxis()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="llm_risk_research_files/figure-html/cell-14-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Interestingly, we may see some variance by ethnicity focused in certain ages?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'risk_score ~ C(gender_ethnicity, Treatment(reference="male , White")) + C(age, Treatment(reference=5))'</span>, data<span class="op">=</span>ordinal_df)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> mod.fit()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>res.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>       <td>risk_score</td>    <th>  R-squared:         </th> <td>   0.076</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.074</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   55.87</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Mon, 10 Apr 2023</td> <th>  Prob (F-statistic):</th> <td>4.48e-162</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>10:42:19</td>     <th>  Log-Likelihood:    </th> <td> -12315.</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td> 10262</td>      <th>  AIC:               </th> <td>2.466e+04</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td> 10246</td>      <th>  BIC:               </th> <td>2.478e+04</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>    15</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+                                       <td></td>                                         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                                                                  <td>    2.7129</td> <td>    0.032</td> <td>   84.850</td> <td> 0.000</td> <td>    2.650</td> <td>    2.776</td>
+</tr>
+<tr>
+  <th>C(gender_ethnicity, Treatment(reference="male , White"))[T.female , Asian]</th> <td>   -0.1123</td> <td>    0.032</td> <td>   -3.551</td> <td> 0.000</td> <td>   -0.174</td> <td>   -0.050</td>
+</tr>
+<tr>
+  <th>C(gender_ethnicity, Treatment(reference="male , White"))[T.female , Black]</th> <td>   -0.0792</td> <td>    0.032</td> <td>   -2.490</td> <td> 0.013</td> <td>   -0.142</td> <td>   -0.017</td>
+</tr>
+<tr>
+  <th>C(gender_ethnicity, Treatment(reference="male , White"))[T.female , Mixed]</th> <td>   -0.1269</td> <td>    0.032</td> <td>   -4.003</td> <td> 0.000</td> <td>   -0.189</td> <td>   -0.065</td>
+</tr>
+<tr>
+  <th>C(gender_ethnicity, Treatment(reference="male , White"))[T.female , White]</th> <td>   -0.1821</td> <td>    0.032</td> <td>   -5.752</td> <td> 0.000</td> <td>   -0.244</td> <td>   -0.120</td>
+</tr>
+<tr>
+  <th>C(gender_ethnicity, Treatment(reference="male , White"))[T.male , Asian]</th>   <td>   -0.0795</td> <td>    0.032</td> <td>   -2.516</td> <td> 0.012</td> <td>   -0.142</td> <td>   -0.018</td>
+</tr>
+<tr>
+  <th>C(gender_ethnicity, Treatment(reference="male , White"))[T.male , Black]</th>   <td>   -0.0860</td> <td>    0.032</td> <td>   -2.721</td> <td> 0.007</td> <td>   -0.148</td> <td>   -0.024</td>
+</tr>
+<tr>
+  <th>C(gender_ethnicity, Treatment(reference="male , White"))[T.male , Mixed]</th>   <td>   -0.0721</td> <td>    0.032</td> <td>   -2.277</td> <td> 0.023</td> <td>   -0.134</td> <td>   -0.010</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.10]</th>                                       <td>   -0.1898</td> <td>    0.034</td> <td>   -5.571</td> <td> 0.000</td> <td>   -0.257</td> <td>   -0.123</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.14]</th>                                       <td>   -0.2203</td> <td>    0.034</td> <td>   -6.465</td> <td> 0.000</td> <td>   -0.287</td> <td>   -0.153</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.16]</th>                                       <td>   -0.3333</td> <td>    0.034</td> <td>   -9.811</td> <td> 0.000</td> <td>   -0.400</td> <td>   -0.267</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.20]</th>                                       <td>   -0.4623</td> <td>    0.034</td> <td>  -13.619</td> <td> 0.000</td> <td>   -0.529</td> <td>   -0.396</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.25]</th>                                       <td>   -0.3860</td> <td>    0.034</td> <td>  -11.342</td> <td> 0.000</td> <td>   -0.453</td> <td>   -0.319</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.50]</th>                                       <td>   -0.4983</td> <td>    0.034</td> <td>  -14.715</td> <td> 0.000</td> <td>   -0.565</td> <td>   -0.432</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.75]</th>                                       <td>   -0.6048</td> <td>    0.034</td> <td>  -17.836</td> <td> 0.000</td> <td>   -0.671</td> <td>   -0.538</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.100]</th>                                      <td>   -0.8027</td> <td>    0.034</td> <td>  -23.644</td> <td> 0.000</td> <td>   -0.869</td> <td>   -0.736</td>
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+  <th>Omnibus:</th>       <td>185.952</td> <th>  Durbin-Watson:     </th> <td>   0.855</td>
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td> 104.179</td>
+</tr>
+<tr>
+  <th>Skew:</th>          <td>-0.035</td>  <th>  Prob(JB):          </th> <td>2.39e-23</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 2.511</td>  <th>  Cond. No.          </th> <td>    10.7</td>
+</tr>
+</tbody></table><br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'risk_score ~ temperature + C(ethnicity, Treatment(reference="White")) + C(age, Treatment(reference=5)) + C(scenario_risk) + C(gender)'</span>, data<span class="op">=</span>ordinal_df)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> mod.fit()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>res.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>       <td>risk_score</td>    <th>  R-squared:         </th> <td>   0.437</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.437</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   531.0</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Mon, 10 Apr 2023</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
+</tr>
+<tr>
+  <th>Time:</th>                 <td>10:30:38</td>     <th>  Log-Likelihood:    </th> <td> -9767.1</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td> 10262</td>      <th>  AIC:               </th> <td>1.957e+04</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td> 10246</td>      <th>  BIC:               </th> <td>1.968e+04</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>    15</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+                           <td></td>                              <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                                           <td>    3.2101</td> <td>    0.026</td> <td>  125.010</td> <td> 0.000</td> <td>    3.160</td> <td>    3.260</td>
+</tr>
+<tr>
+  <th>C(ethnicity, Treatment(reference="White"))[T.Asian]</th> <td>   -0.0043</td> <td>    0.017</td> <td>   -0.247</td> <td> 0.805</td> <td>   -0.039</td> <td>    0.030</td>
+</tr>
+<tr>
+  <th>C(ethnicity, Treatment(reference="White"))[T.Black]</th> <td>    0.0131</td> <td>    0.018</td> <td>    0.746</td> <td> 0.456</td> <td>   -0.021</td> <td>    0.047</td>
+</tr>
+<tr>
+  <th>C(ethnicity, Treatment(reference="White"))[T.Mixed]</th> <td>   -0.0089</td> <td>    0.018</td> <td>   -0.510</td> <td> 0.610</td> <td>   -0.043</td> <td>    0.025</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.10]</th>                <td>   -0.2006</td> <td>    0.027</td> <td>   -7.548</td> <td> 0.000</td> <td>   -0.253</td> <td>   -0.148</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.14]</th>                <td>   -0.2244</td> <td>    0.027</td> <td>   -8.443</td> <td> 0.000</td> <td>   -0.276</td> <td>   -0.172</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.16]</th>                <td>   -0.3331</td> <td>    0.027</td> <td>  -12.569</td> <td> 0.000</td> <td>   -0.385</td> <td>   -0.281</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.20]</th>                <td>   -0.4620</td> <td>    0.026</td> <td>  -17.445</td> <td> 0.000</td> <td>   -0.514</td> <td>   -0.410</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.25]</th>                <td>   -0.3884</td> <td>    0.027</td> <td>  -14.630</td> <td> 0.000</td> <td>   -0.440</td> <td>   -0.336</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.50]</th>                <td>   -0.5053</td> <td>    0.026</td> <td>  -19.126</td> <td> 0.000</td> <td>   -0.557</td> <td>   -0.454</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.75]</th>                <td>   -0.6069</td> <td>    0.026</td> <td>  -22.939</td> <td> 0.000</td> <td>   -0.659</td> <td>   -0.555</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.100]</th>               <td>   -0.8027</td> <td>    0.026</td> <td>  -30.305</td> <td> 0.000</td> <td>   -0.855</td> <td>   -0.751</td>
+</tr>
+<tr>
+  <th>C(scenario_risk)[T.frequent_missing]</th>                <td>   -1.2154</td> <td>    0.015</td> <td>  -80.083</td> <td> 0.000</td> <td>   -1.245</td> <td>   -1.186</td>
+</tr>
+<tr>
+  <th>C(scenario_risk)[T.out_of_character]</th>                <td>   -0.4503</td> <td>    0.015</td> <td>  -29.651</td> <td> 0.000</td> <td>   -0.480</td> <td>   -0.421</td>
+</tr>
+<tr>
+  <th>C(gender)[T.male]</th>                                   <td>    0.0671</td> <td>    0.012</td> <td>    5.416</td> <td> 0.000</td> <td>    0.043</td> <td>    0.091</td>
+</tr>
+<tr>
+  <th>temperature</th>                                         <td>   -0.0655</td> <td>    0.009</td> <td>   -7.319</td> <td> 0.000</td> <td>   -0.083</td> <td>   -0.048</td>
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+  <th>Omnibus:</th>       <td>525.100</td> <th>  Durbin-Watson:     </th> <td>   1.382</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>1021.860</td> 
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 0.376</td>  <th>  Prob(JB):          </th> <td>1.28e-222</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 4.351</td>  <th>  Cond. No.          </th> <td>    16.4</td> 
+</tr>
+</tbody></table><br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'risk_score ~ temperature + C(age, Treatment(reference=5))*C(ethnicity, Treatment(reference="White")) + C(scenario_risk)'</span>, data<span class="op">=</span>ordinal_df)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> mod.fit()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>res.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>       <td>risk_score</td>    <th>  R-squared:         </th> <td>   0.447</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.445</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   217.1</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Mon, 10 Apr 2023</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
+</tr>
+<tr>
+  <th>Time:</th>                 <td>10:33:43</td>     <th>  Log-Likelihood:    </th> <td> -9682.3</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td> 10262</td>      <th>  AIC:               </th> <td>1.944e+04</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td> 10223</td>      <th>  BIC:               </th> <td>1.972e+04</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>    38</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+                                              <td></td>                                                 <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                                                                                 <td>    3.4059</td> <td>    0.039</td> <td>   87.593</td> <td> 0.000</td> <td>    3.330</td> <td>    3.482</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.10]</th>                                                      <td>   -0.2652</td> <td>    0.052</td> <td>   -5.083</td> <td> 0.000</td> <td>   -0.367</td> <td>   -0.163</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.14]</th>                                                      <td>   -0.3907</td> <td>    0.052</td> <td>   -7.481</td> <td> 0.000</td> <td>   -0.493</td> <td>   -0.288</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.16]</th>                                                      <td>   -0.6020</td> <td>    0.052</td> <td>  -11.498</td> <td> 0.000</td> <td>   -0.705</td> <td>   -0.499</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.20]</th>                                                      <td>   -0.5245</td> <td>    0.052</td> <td>  -10.054</td> <td> 0.000</td> <td>   -0.627</td> <td>   -0.422</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.25]</th>                                                      <td>   -0.5658</td> <td>    0.052</td> <td>  -10.891</td> <td> 0.000</td> <td>   -0.668</td> <td>   -0.464</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.50]</th>                                                      <td>   -0.7034</td> <td>    0.052</td> <td>  -13.528</td> <td> 0.000</td> <td>   -0.805</td> <td>   -0.601</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.75]</th>                                                      <td>   -0.9321</td> <td>    0.052</td> <td>  -17.866</td> <td> 0.000</td> <td>   -1.034</td> <td>   -0.830</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.100]</th>                                                     <td>   -0.9945</td> <td>    0.052</td> <td>  -19.112</td> <td> 0.000</td> <td>   -1.097</td> <td>   -0.893</td>
+</tr>
+<tr>
+  <th>C(ethnicity, Treatment(reference="White"))[T.Asian]</th>                                       <td>   -0.0839</td> <td>    0.052</td> <td>   -1.606</td> <td> 0.108</td> <td>   -0.186</td> <td>    0.019</td>
+</tr>
+<tr>
+  <th>C(ethnicity, Treatment(reference="White"))[T.Black]</th>                                       <td>   -0.1738</td> <td>    0.053</td> <td>   -3.262</td> <td> 0.001</td> <td>   -0.278</td> <td>   -0.069</td>
+</tr>
+<tr>
+  <th>C(ethnicity, Treatment(reference="White"))[T.Mixed]</th>                                       <td>   -0.4053</td> <td>    0.053</td> <td>   -7.619</td> <td> 0.000</td> <td>   -0.510</td> <td>   -0.301</td>
+</tr>
+<tr>
+  <th>C(scenario_risk)[T.frequent_missing]</th>                                                      <td>   -1.2158</td> <td>    0.015</td> <td>  -80.679</td> <td> 0.000</td> <td>   -1.245</td> <td>   -1.186</td>
+</tr>
+<tr>
+  <th>C(scenario_risk)[T.out_of_character]</th>                                                      <td>   -0.4504</td> <td>    0.015</td> <td>  -29.863</td> <td> 0.000</td> <td>   -0.480</td> <td>   -0.421</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.10]:C(ethnicity, Treatment(reference="White"))[T.Asian]</th>  <td>   -0.1795</td> <td>    0.074</td> <td>   -2.429</td> <td> 0.015</td> <td>   -0.324</td> <td>   -0.035</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.14]:C(ethnicity, Treatment(reference="White"))[T.Asian]</th>  <td>    0.0456</td> <td>    0.074</td> <td>    0.619</td> <td> 0.536</td> <td>   -0.099</td> <td>    0.190</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.16]:C(ethnicity, Treatment(reference="White"))[T.Asian]</th>  <td>    0.2357</td> <td>    0.074</td> <td>    3.193</td> <td> 0.001</td> <td>    0.091</td> <td>    0.380</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.20]:C(ethnicity, Treatment(reference="White"))[T.Asian]</th>  <td>   -0.1283</td> <td>    0.074</td> <td>   -1.742</td> <td> 0.081</td> <td>   -0.273</td> <td>    0.016</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.25]:C(ethnicity, Treatment(reference="White"))[T.Asian]</th>  <td>    0.0675</td> <td>    0.074</td> <td>    0.913</td> <td> 0.361</td> <td>   -0.077</td> <td>    0.212</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.50]:C(ethnicity, Treatment(reference="White"))[T.Asian]</th>  <td>    0.1501</td> <td>    0.073</td> <td>    2.045</td> <td> 0.041</td> <td>    0.006</td> <td>    0.294</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.75]:C(ethnicity, Treatment(reference="White"))[T.Asian]</th>  <td>    0.3206</td> <td>    0.074</td> <td>    4.343</td> <td> 0.000</td> <td>    0.176</td> <td>    0.465</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.100]:C(ethnicity, Treatment(reference="White"))[T.Asian]</th> <td>    0.2027</td> <td>    0.074</td> <td>    2.748</td> <td> 0.006</td> <td>    0.058</td> <td>    0.347</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.10]:C(ethnicity, Treatment(reference="White"))[T.Black]</th>  <td>    0.1625</td> <td>    0.075</td> <td>    2.177</td> <td> 0.030</td> <td>    0.016</td> <td>    0.309</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.14]:C(ethnicity, Treatment(reference="White"))[T.Black]</th>  <td>    0.2815</td> <td>    0.075</td> <td>    3.763</td> <td> 0.000</td> <td>    0.135</td> <td>    0.428</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.16]:C(ethnicity, Treatment(reference="White"))[T.Black]</th>  <td>    0.2045</td> <td>    0.075</td> <td>    2.745</td> <td> 0.006</td> <td>    0.058</td> <td>    0.351</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.20]:C(ethnicity, Treatment(reference="White"))[T.Black]</th>  <td>    0.0208</td> <td>    0.075</td> <td>    0.280</td> <td> 0.780</td> <td>   -0.125</td> <td>    0.167</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.25]:C(ethnicity, Treatment(reference="White"))[T.Black]</th>  <td>    0.2159</td> <td>    0.074</td> <td>    2.900</td> <td> 0.004</td> <td>    0.070</td> <td>    0.362</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.50]:C(ethnicity, Treatment(reference="White"))[T.Black]</th>  <td>    0.1924</td> <td>    0.074</td> <td>    2.587</td> <td> 0.010</td> <td>    0.047</td> <td>    0.338</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.75]:C(ethnicity, Treatment(reference="White"))[T.Black]</th>  <td>    0.4384</td> <td>    0.074</td> <td>    5.897</td> <td> 0.000</td> <td>    0.293</td> <td>    0.584</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.100]:C(ethnicity, Treatment(reference="White"))[T.Black]</th> <td>    0.1692</td> <td>    0.074</td> <td>    2.278</td> <td> 0.023</td> <td>    0.024</td> <td>    0.315</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.10]:C(ethnicity, Treatment(reference="White"))[T.Mixed]</th>  <td>    0.2916</td> <td>    0.075</td> <td>    3.911</td> <td> 0.000</td> <td>    0.145</td> <td>    0.438</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.14]:C(ethnicity, Treatment(reference="White"))[T.Mixed]</th>  <td>    0.3566</td> <td>    0.075</td> <td>    4.775</td> <td> 0.000</td> <td>    0.210</td> <td>    0.503</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.16]:C(ethnicity, Treatment(reference="White"))[T.Mixed]</th>  <td>    0.6518</td> <td>    0.075</td> <td>    8.737</td> <td> 0.000</td> <td>    0.506</td> <td>    0.798</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.20]:C(ethnicity, Treatment(reference="White"))[T.Mixed]</th>  <td>    0.3743</td> <td>    0.074</td> <td>    5.032</td> <td> 0.000</td> <td>    0.228</td> <td>    0.520</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.25]:C(ethnicity, Treatment(reference="White"))[T.Mixed]</th>  <td>    0.4403</td> <td>    0.074</td> <td>    5.927</td> <td> 0.000</td> <td>    0.295</td> <td>    0.586</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.50]:C(ethnicity, Treatment(reference="White"))[T.Mixed]</th>  <td>    0.4640</td> <td>    0.074</td> <td>    6.256</td> <td> 0.000</td> <td>    0.319</td> <td>    0.609</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.75]:C(ethnicity, Treatment(reference="White"))[T.Mixed]</th>  <td>    0.5557</td> <td>    0.074</td> <td>    7.483</td> <td> 0.000</td> <td>    0.410</td> <td>    0.701</td>
+</tr>
+<tr>
+  <th>C(age, Treatment(reference=5))[T.100]:C(ethnicity, Treatment(reference="White"))[T.Mixed]</th> <td>    0.4125</td> <td>    0.074</td> <td>    5.546</td> <td> 0.000</td> <td>    0.267</td> <td>    0.558</td>
+</tr>
+<tr>
+  <th>temperature</th>                                                                               <td>   -0.0657</td> <td>    0.009</td> <td>   -7.392</td> <td> 0.000</td> <td>   -0.083</td> <td>   -0.048</td>
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+  <th>Omnibus:</th>       <td>551.844</td> <th>  Durbin-Watson:     </th> <td>   1.404</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>1157.977</td> 
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 0.370</td>  <th>  Prob(JB):          </th> <td>3.54e-252</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 4.470</td>  <th>  Cond. No.          </th> <td>    67.7</td> 
+</tr>
+</tbody></table><br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</div>
+</div>
+<p>One challenge we have - is this due to varying context returned by ethnicity? We’ll have to replicate it later and store the context so we can compare, but it seems unlikely given we’re really only varying a few words.</p>
+<section id="police-versus-machine-assessed-risk" class="level2">
+<h2 class="anchored" data-anchor-id="police-versus-machine-assessed-risk">Police versus Machine Assessed Risk</h2>
+<p>We’ll now write up a series of scenarios, and see how our model compares to our professional judgement. We’ll use gender neutral names.</p>
+<ol type="1">
+<li><p>It is now 2130 on a Thursday night. Ollie is a 35 year old female. She has been reported missing by her boyfriend as she has not yet returned from work, he has not heard from her, and her mobile phone is not picking up. He says this is very out of character, as he was expecting her home. He has reached out to work colleagues and friends, who says she left work around 1730 to go home as expected. Ollie is an adult with no mental health or welfare concerns.</p></li>
+<li><p>It is 2200 on Friday. Jason is a 16 year old boy. He has been reported missing by his Foster carer, who has not heard from him since he left school around 1630 today. Jason is streetwise and can take care of himself, but his carer says this has been happening more frequently recently, as Jason has been hanging out with some new friends. He has been in care for 1 year, and has no mental health or welfare concerns.</p></li>
+<li><p>It 2130 on a Saturday evening. James is a 86 year old man, who has been reported missing by his nurse in supported accomodation. He has dementia, and she is worried he has wandered off. This has happened once before, where he was found down the road confused and waiting at a bus stop, but he has now been missing for nearly an hour and nobody has found him despite searching the local streets. It is now dark, although the weather is warm.</p></li>
+<li><p>It is 2200 on a Wednesday evening. Sophie is a 16 year old girl, who has been reported missing by her mother, who has not heard from her since she left school that afternoon. Sophie said she was going to hang out with her friends, but she has never been out this later before phoning before, and this is out of character. Sophie has no mental health or welfare concerns. Talking to her teacher, she has been hanging out with a new group of friends recently, and they think they once saw her picked up by an older boyfriend in a car outside school, who apparently bought one of her friends a new phone as a gift. Her mother does not know if she is on social media, but apparently she recently installed Snapchat after a new friend encouraged her to.</p></li>
+<li><p>It is 1100 on Saturday morning. George is a 41 year old man, who has been reported missing by his wife. She says he went out for drinks with his friends last night, and she has not heard from him since. She says he does stay out late partying from time to time, but he has never not come home in the morning. She is worried about what might have happened. George has no mental health or welfare concerns, though his wife has admitted he does sometimes drink too much, and uses drugs (mostly cocaine) recreationally.</p></li>
+<li><p>It is 1700 on a Thursday night. Sarah is a transgender girl, who has been reported missing by her school, who say she ran out around 30 minutes ago. Apparently she had an alteraction with a group of students, who have been bullying her for a period of months. Her teachers have concerns for her welfare, as the bullying is believed to have impacted her mental health - she has been self-harming, and apparently reported thoughts of suicide. Her parents, who are separated, have been contacted, but her father says he has not seen her for months, and her mother said “Im so sick of his nonsense”.</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>comparison_df <span class="op">=</span> pd.read_parquet(<span class="st">'../outputs/machine_cop_comparison_df.parquet'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>sns.violinplot(data<span class="op">=</span>comparison_df, x<span class="op">=</span><span class="st">'scenario_number'</span>, y<span class="op">=</span><span class="st">'risk_score'</span>,ax<span class="op">=</span>ax)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>sns.swarmplot(data<span class="op">=</span>comparison_df, x<span class="op">=</span><span class="st">'scenario_number'</span>, y<span class="op">=</span><span class="st">'risk_score'</span>,ax<span class="op">=</span>ax,color<span class="op">=</span><span class="st">'black'</span>,dodge<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>ax.set_yticks([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>])</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>ax.set_yticklabels([<span class="st">'absent'</span>, <span class="st">'low'</span>, <span class="st">'medium'</span>, <span class="st">'high'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>[Text(0, 1, 'absent'),
+ Text(0, 2, 'low'),
+ Text(0, 3, 'medium'),
+ Text(0, 4, 'high')]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="llm_risk_research_files/figure-html/cell-19-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>am</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

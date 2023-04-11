@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>police-risk-open-ai - Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="police-risk-open-ai - Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias">
+<meta property="og:description" content="In England &amp; Wales, the initial response to missing persons investigations will fall to the police service - in fact, this represents one of the biggest demands on policing organisations, totally…">
+<meta property="og:site-name" content="police-risk-open-ai">
+<meta name="twitter:title" content="police-risk-open-ai - Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias">
+<meta name="twitter:description" content="In England &amp; Wales, the initial response to missing persons investigations will fall to the police service - in fact, this represents one of the biggest demands on policing organisations, totally…">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">police-risk-open-ai</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">police-risk-open-ai</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../llm.html" class="sidebar-item-text sidebar-link">LLM</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../crawl.html" class="sidebar-item-text sidebar-link">Crawl</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../variance_analysis.html" class="sidebar-item-text sidebar-link">Variance Analysis</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Analysis</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/chat_api.html" class="sidebar-item-text sidebar-link">chat_api.html</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/explainer.html" class="sidebar-item-text sidebar-link">An OpenAI Experiment - CopBot!</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/llm_risk_research.html" class="sidebar-item-text sidebar-link">Police versus Machine Assessed Risk</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/research_paper.html" class="sidebar-item-text sidebar-link active">Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  <li><a href="#literature-review" id="toc-literature-review" class="nav-link" data-scroll-target="#literature-review">Literature Review</a>
+  <ul class="collapse">
+  <li><a href="#police-and-missing-people" id="toc-police-and-missing-people" class="nav-link" data-scroll-target="#police-and-missing-people">Police and Missing People</a></li>
+  <li><a href="#large-langage-models" id="toc-large-langage-models" class="nav-link" data-scroll-target="#large-langage-models">Large Langage Models</a></li>
+  </ul></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a></li>
+  <li><a href="#findings" id="toc-findings" class="nav-link" data-scroll-target="#findings">Findings</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a>
+  <ul class="collapse">
+  <li><a href="#missing-scenarios" id="toc-missing-scenarios" class="nav-link" data-scroll-target="#missing-scenarios">1. Missing Scenarios</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/AndreasThinks/police-risk-open-ai/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>In England &amp; Wales, the initial response to missing persons investigations will fall to the police service - in fact, this represents one of the biggest demands on policing organisations, totally just over 240 thousand calls accross England &amp; Wales in 2020-21 (<span class="citation" data-cites="noauthor_missing_2022">(<a href="#ref-noauthor_missing_2022" role="doc-biblioref"><span>“Missing <span>Persons</span> <span>Data</span> <span>Report</span> 2020/21”</span> 2022</a>)</span>). Despite their frequency, these investigations can be complex: officers must manage a complex of dependencies, while balancing individuals right to privacy with public and press concerns (<span class="citation" data-cites="fyfe_missing_2015">(<a href="#ref-fyfe_missing_2015" role="doc-biblioref">Fyfe, Stevenson, and Woolnough 2015</a>)</span>).</p>
+<p>Guidance and approaches by the College of Policing’s Authorised Professional Practice.</p>
+</section>
+<section id="literature-review" class="level2">
+<h2 class="anchored" data-anchor-id="literature-review">Literature Review</h2>
+<section id="police-and-missing-people" class="level3">
+<h3 class="anchored" data-anchor-id="police-and-missing-people">Police and Missing People</h3>
+</section>
+<section id="large-langage-models" class="level3">
+<h3 class="anchored" data-anchor-id="large-langage-models">Large Langage Models</h3>
+</section>
+</section>
+<section id="methodology" class="level2">
+<h2 class="anchored" data-anchor-id="methodology">Methodology</h2>
+<p>Our aim is to investigate how LLM’s assess risk in a variety of context - as such, I have created 6 theoretical scenarios, based on a range of professional experiences, highlighting potentials risks. These are available in detail in the appendix, and quickly summarised in table X. For each, I have used my professional judgement to conduct an initial risk assessment, in line with College of Policing APP, given the available information.</p>
+<table class="table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 31%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scenario Number</th>
+<th>Risk Factor Summary</th>
+<th style="text-align: right;">Risk Assessment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Adult female missing for a few hours in a way that is very out of character</td>
+<td style="text-align: right;">Medium risk</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>16 year old boy in care who has not returned after school</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>86 year old man with dementia who has walked out of supported accomodation</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>16 year old girl who has not returned after school, and has starting hanging out with suspicious friends</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>41 year old man who has gone drinking with colleagues, and not returned the next morning</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>15 year old transgender girl, subject to self-harm and suicidal ideation following bullying, who has run out of school</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="findings" class="level2">
+<h2 class="anchored" data-anchor-id="findings">Findings</h2>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+</section>
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
+<section id="missing-scenarios" class="level3">
+<h3 class="anchored" data-anchor-id="missing-scenarios">1. Missing Scenarios</h3>
+<ol type="1">
+<li><p>It is now 2130 on a Thursday night. Ollie is a 35 year old female. She has been reported missing by her boyfriend as she has not yet returned from work, he has not heard from her, and her mobile phone is not picking up. He says this is very out of character, as he was expecting her home. He has reached out to work colleagues and friends, who says she left work around 1730 to go home as expected. Ollie is an adult with no mental health or welfare concerns.</p></li>
+<li><p>It is 2200 on Friday. Jason is a 16 year old boy. He has been reported missing by his Foster carer, who has not heard from him since he left school around 1630 today. Jason is streetwise and can take care of himself, but his carer says this has been happening more frequently recently, as Jason has been hanging out with some new friends. He has been in care for 1 year, and has no mental health or welfare concerns.</p></li>
+<li><p>It 2130 on a Saturday evening. James is a 86 year old man, who has been reported missing by his nurse in supported accomodation. He has dementia, and she is worried he has wandered off. This has happened once before, where he was found down the road confused and waiting at a bus stop, but he has now been missing for nearly an hour and nobody has found him despite searching the local streets. It is now dark, although the weather is warm.</p></li>
+<li><p>It is 2200 on a Wednesday evening. Sophie is a 16 year old girl, who has been reported missing by her mother, who has not heard from her since she left school that afternoon. Sophie said she was going to hang out with her friends, but she has never been out this later before phoning before, and this is out of character. Sophie has no mental health or welfare concerns. Talking to her teacher, she has been hanging out with a new group of friends recently, and they think they once saw her picked up by an older boyfriend in a car outside school, who apparently bought one of her friends a new phone as a gift. Her mother does not know if she is on social media, but apparently she recently installed Snapchat after a new friend encouraged her to.</p></li>
+<li><p>It is 1100 on Saturday morning. George is a 41 year old man, who has been reported missing by his wife. She says he went out for drinks with his friends last night, and she has not heard from him since. She says he does stay out late partying from time to time, but he has never not come home in the morning. She is worried about what might have happened. George has no mental health or welfare concerns, though his wife has admitted he does sometimes drink too much, and uses drugs (mostly cocaine) recreationally.</p></li>
+<li><p>It is 1700 on a Thursday night. Sarah is a transgender girl, who has been reported missing by her school, who say she ran out around 30 minutes ago. Apparently she had an alteraction with a group of students, who have been bullying her for a period of months. Her teachers have concerns for her welfare, as the bullying is believed to have impacted her mental health - she has been self-harming, and apparently reported thoughts of suicide. Her parents, who are separated, have been contacted, but her father says he has not seen her for months, and her mother said “Im so sick of his nonsense”.</p></li>
+</ol>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-fyfe_missing_2015" class="csl-entry" role="doc-biblioentry">
+Fyfe, Nicholas R., O. Stevenson, and Penny Woolnough. 2015. <span>“Missing Persons: The Processes and Challenges of Police Investigation.”</span> <em>Policing &amp; Society</em> 25 (4): 409–25. <a href="https://doi.org/10.1080/10439463.2014.881812">https://doi.org/10.1080/10439463.2014.881812</a>.
+</div>
+<div id="ref-noauthor_missing_2022" class="csl-entry" role="doc-biblioentry">
+<span>“Missing <span>Persons</span> <span>Data</span> <span>Report</span> 2020/21.”</span> 2022. UK Missing Persons Unit. <a href="https://missingpersons.police.uk:443/cy-gb/resources/downloads/missing-persons-statistical-bulletins">https://missingpersons.police.uk:443/cy-gb/resources/downloads/missing-persons-statistical-bulletins</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

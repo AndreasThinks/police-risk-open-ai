@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>police-risk-open-ai – chat_api</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">police-risk-open-ai</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">police-risk-open-ai</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../llm.html" class="sidebar-item-text sidebar-link">LLM</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../crawl.html" class="sidebar-item-text sidebar-link">Crawl</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../variance_analysis.html" class="sidebar-item-text sidebar-link">Variance Analysis</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Analysis</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/chat_api.html" class="sidebar-item-text sidebar-link active">chat_api.html</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/explainer.html" class="sidebar-item-text sidebar-link">An OpenAI Experiment - CopBot!</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/llm_risk_research.html" class="sidebar-item-text sidebar-link">Police versus Machine Assessed Risk</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Analysis/research_paper.html" class="sidebar-item-text sidebar-link">Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dotenv <span class="im">import</span> load_dotenv</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> openai</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiktoken</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai.embeddings_utils <span class="im">import</span> distances_from_embeddings</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>load_dotenv()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>openai.api_key <span class="op">=</span> os.getenv(<span class="st">"OPENAI_API_KEY"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We’ll use this notebook to explore using the Chat api instead of completion, which should improve performance and cost.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_context(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    question, df, max_len<span class="op">=</span><span class="dv">1800</span>, size<span class="op">=</span><span class="st">"ada"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Create a context for a question by finding the most similar context from the dataframe</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get the embeddings for the question</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    q_embeddings <span class="op">=</span> openai.Embedding.create(<span class="bu">input</span><span class="op">=</span>question, engine<span class="op">=</span><span class="st">'text-embedding-ada-002'</span>)[<span class="st">'data'</span>][<span class="dv">0</span>][<span class="st">'embedding'</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get the distances from the embeddings</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'distances'</span>] <span class="op">=</span> distances_from_embeddings(q_embeddings, df[<span class="st">'embeddings'</span>].values, distance_metric<span class="op">=</span><span class="st">'cosine'</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    returns <span class="op">=</span> []</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    cur_len <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sort by distance and add the text to the context until the context is too long</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, row <span class="kw">in</span> df.sort_values(<span class="st">'distances'</span>, ascending<span class="op">=</span><span class="va">True</span>).iterrows():</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Add the length of the text to the current length</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        cur_len <span class="op">+=</span> row[<span class="st">'n_tokens'</span>] <span class="op">+</span> <span class="dv">4</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If the context is too long, break</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> cur_len <span class="op">&gt;</span> max_len:</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Else add it to the text that is being returned</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        returns.append(row[<span class="st">"text"</span>])</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return the context</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"</span><span class="ch">\n\n</span><span class="st">###</span><span class="ch">\n\n</span><span class="st">"</span>.join(returns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> machine_risk_assessment(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    question,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    df,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"text-davinci-003"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    max_len<span class="op">=</span><span class="dv">1800</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span><span class="st">"ada"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    debug<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    max_tokens<span class="op">=</span><span class="dv">150</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    stop_sequence<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">    Answer a question based on the most similar context from the dataframe texts</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    context <span class="op">=</span> create_context(</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        question,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        df,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        max_len<span class="op">=</span>max_len,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span>size,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    missing_risk_prompt <span class="op">=</span> <span class="ss">f""" Using the information below on a missing person, decide on the appropriate risk grading for the person, from either</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- High risk</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- Medium risk</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- Low risk</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- no apparent risk</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="ss">Return your answer in the format: 'Graded as X risk, because of the below risk factors:</span><span class="ch">\n</span><span class="ss"> - Y </span><span class="ch">\n</span><span class="ss"> - Z </span><span class="ch">\n</span><span class="ss">'</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="ss">Where X is your risk grading (high, medium, low, or no apparent risk) and Y and Z are a few sentences explaining the most important risks you have identified.</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="ss">if the question can't be answered based on the context, say </span><span class="ch">\"</span><span class="ss">I don't know</span><span class="ch">\"\n\n</span><span class="ss">Context: </span><span class="sc">{</span>context<span class="sc">}</span><span class="ch">\n\n</span><span class="ss">---</span><span class="ch">\n\n</span><span class="ss">Question: </span><span class="sc">{</span>question<span class="sc">}</span><span class="ch">\n</span><span class="ss">Answer:"""</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If debug, print the raw model response</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> debug:</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Question:</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> question)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Context:</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> context)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n\n</span><span class="st">"</span>)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create a completions using the question and context</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> openai.Completion.create(</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>            prompt<span class="op">=</span>missing_risk_prompt,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>            temperature<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>            max_tokens<span class="op">=</span>max_tokens,</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>            top_p<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>            frequency_penalty<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>            presence_penalty<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>            stop<span class="op">=</span>stop_sequence,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>            model<span class="op">=</span>model,</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>        answer <span class="op">=</span> response[<span class="st">"choices"</span>][<span class="dv">0</span>][<span class="st">"text"</span>].strip()</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> answer, context</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(e)</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_parquet(<span class="st">'processed/embeddings.parquet'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>text</th>
+      <th>n_tokens</th>
+      <th>embeddings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4431</th>
+      <td>.police.uk app public order core principles an...</td>
+      <td>393</td>
+      <td>[0.002413947368040681, 0.016671480610966682, -...</td>
+    </tr>
+    <tr>
+      <th>849</th>
+      <td>To co-create the training with practitioner st...</td>
+      <td>419</td>
+      <td>[-0.010183705948293209, 0.008118431083858013, ...</td>
+    </tr>
+    <tr>
+      <th>6612</th>
+      <td>The goal of problem analysis is to help you id...</td>
+      <td>482</td>
+      <td>[0.010752184316515923, 0.018526222556829453, 0...</td>
+    </tr>
+    <tr>
+      <th>6068</th>
+      <td>Police data, investigation files, and intervie...</td>
+      <td>384</td>
+      <td>[0.01356875617057085, 0.009414355270564556, 0....</td>
+    </tr>
+    <tr>
+      <th>3432</th>
+      <td>Of a racialist nature means consisting of, or ...</td>
+      <td>486</td>
+      <td>[-0.012264551594853401, -0.008601714856922626,...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>7261</th>
+      <td>.police.uk app armed policing deployment autho...</td>
+      <td>405</td>
+      <td>[-0.002368964720517397, 0.004855205304920673, ...</td>
+    </tr>
+    <tr>
+      <th>6941</th>
+      <td>.police.uk cdn cgi l email protection#2d485f47...</td>
+      <td>203</td>
+      <td>[-0.0013092802837491035, -0.01627718284726143,...</td>
+    </tr>
+    <tr>
+      <th>8758</th>
+      <td>.police.uk article neighbourhood policing week...</td>
+      <td>484</td>
+      <td>[0.003850934561342001, 0.014110091142356396, 0...</td>
+    </tr>
+    <tr>
+      <th>6055</th>
+      <td>The neighbourhood role also enabled me to prot...</td>
+      <td>488</td>
+      <td>[0.005274541676044464, 0.006226117257028818, -...</td>
+    </tr>
+    <tr>
+      <th>801</th>
+      <td>These are organised into the following three s...</td>
+      <td>488</td>
+      <td>[-0.00021213867876213044, 0.015380156226456165...</td>
+    </tr>
+  </tbody>
+</table>
+<p>7602 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>about_yannik <span class="op">=</span> <span class="st">""" Yannik is a 15 year old boy. He has recently been down, and was reported missing by his parents as he did not return home from school today.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">His friends are worried he may be depressed, and when he apparently told one a few days ago 'if it doesn't get any better, I'm going to end it soon'</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>yannik_answer, yannik_context <span class="op">=</span> machine_risk_assessment(about_yannik, df)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>yannik_answer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'Graded as High risk, because of the below risk factors: \n- Yannik is a 15 year old boy who has been reported missing by his parents\n- His friends are worried he may be depressed\n- He has expressed suicidal ideation to one of his friends'</code></pre>
+</div>
+</div>
+<p>Now let’s modify our code to use the chat api. Below we have the test API call .</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: you need to be using OpenAI Python v0.27.0 for the code below to work</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> openai</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>test_response <span class="op">=</span> openai.ChatCompletion.create(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  model<span class="op">=</span><span class="st">"gpt-3.5-turbo"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  messages<span class="op">=</span>[</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"You are a helpful assistant."</span>},</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"Who won the world series in 2020?"</span>},</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: <span class="st">"The Los Angeles Dodgers won the World Series in 2020."</span>},</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"Where was it played?"</span>}</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>test_response</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;OpenAIObject chat.completion id=chatcmpl-734PYCs3fvPxVf68NVINq4wOIu6xK&gt; JSON: {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "The 2020 World Series was played at Globe Life Field in Arlington, Texas.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1680966296,
+  "id": "chatcmpl-734PYCs3fvPxVf68NVINq4wOIu6xK",
+  "model": "gpt-3.5-turbo-0301",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 17,
+    "prompt_tokens": 57,
+    "total_tokens": 74
+  }
+}</code></pre>
+</div>
+</div>
+<p>So, we need to decide how to fill in our bits of context. Of note, the OpenAI docs say the system messages aren’t always picked up… we can expirtment. Let’s start with testing using the system messages to define role and response format.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>copbot_chat_content <span class="op">=</span> <span class="st">'''</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="st">You are CopBot, an assistant designed to help police officers risk assess missing persons.</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">Using the information provide on a missing person, you will decide on the appropriate risk grading for the person, from either</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">- No apparent risk (when there is no apparent risk of harm to either the subject or the public.)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="st">- Low risk (when the risk of harm to the subject or the public is assessed as possible but minimal)</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="st">- Medium risk (when the risk of harm to the subject or the public is assessed as likely but not serious.)</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="st">- High risk (when the risk of serious harm to the subject or the public is assessed as very likely.)</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="st">Risk assessment should be guided by the College of Policing Risk principles.</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="st">Return your answer in the format: 'Graded as X risk, because of the below risk factors:</span><span class="ch">\n</span><span class="st"> - Y </span><span class="ch">\n</span><span class="st"> - Z </span><span class="ch">\n</span><span class="st">'</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="st">Where X is your risk grading (high, medium, low, or no apparent risk) and Y and Z are a few sentences explaining the most important risks you have identified.</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="st">if the question can't be answered based on the context, say </span><span class="ch">\"</span><span class="st">I don't know</span><span class="ch">\"</span><span class="st">'''</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It looks like our content will be what was previously our context, so we’ll modify our code to use that.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_chat_assistant_content(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    question, df, max_len<span class="op">=</span><span class="dv">1800</span>, size<span class="op">=</span><span class="st">"ada"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Create a context for a question by finding the most similar context from the dataframe</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get the embeddings for the question</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    q_embeddings <span class="op">=</span> openai.Embedding.create(<span class="bu">input</span><span class="op">=</span>question, engine<span class="op">=</span><span class="st">'text-embedding-ada-002'</span>)[<span class="st">'data'</span>][<span class="dv">0</span>][<span class="st">'embedding'</span>]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get the distances from the embeddings</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'distances'</span>] <span class="op">=</span> distances_from_embeddings(q_embeddings, df[<span class="st">'embeddings'</span>].values, distance_metric<span class="op">=</span><span class="st">'cosine'</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    returns <span class="op">=</span> [<span class="st">"Here is some relevant guidance and documentation from the College of Policing"</span>]</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    cur_len <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sort by distance and add the text to the context until the context is too long</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, row <span class="kw">in</span> df.sort_values(<span class="st">'distances'</span>, ascending<span class="op">=</span><span class="va">True</span>).iterrows():</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Add the length of the text to the current length</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        cur_len <span class="op">+=</span> row[<span class="st">'n_tokens'</span>] <span class="op">+</span> <span class="dv">4</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If the context is too long, break</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> cur_len <span class="op">&gt;</span> max_len:</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Else add it to the text that is being returned</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        returns.append(row[<span class="st">"text"</span>])</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return the context</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"</span><span class="ch">\n\n</span><span class="st">###</span><span class="ch">\n\n</span><span class="st">"</span>.join(returns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>yannik_assistant_content <span class="op">=</span> create_chat_assistant_content(about_yannik, df)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>yannik_assistant_content</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>"Here is some relevant guidance and documentation from the College of Policing\n\n###\n\n First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see\xa0APP\xa0on international investigation\xa0for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see\xa0Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child\xa0 Voice of the child practice briefing\xa0 Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children\xa0may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,\xa0as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to\xa0work with all the agencies and carers\xa0that\xa0have been\xa0in regular contact with the child as they\xa0may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.\n\n###\n\nIt’s also been raining heavily in the night and we have further calls about flooding in the road, so we ring Highways to inform them. I have a little smile to myself as I remember a call in the summer about cars stopping on the M11 because a mother duck and her ducklings were crossing the road. Lunchtime looms. I’m feeling hungry, but that disappears when I take a call from a 16-year-old male, who tells me that he can’t cope any more. He has cut himself with a knife but he doesn’t want to die. His sister has just had a baby. This goes on an emergency straight away, and officers are dispatched within three minutes. I have to talk to him about anything I can to distract him from his misery – luckily, I am good at small talk! Officers arrive and I feel relief as I can hang up the phone. COVID-19 has really affected Essex this year. People are low and weary. You can hear it in their voices. The number of mental health incidents has gone through the roof, and even the force control room team is quieter. Because of\xa0the onset of lockdown restrictions, more calls are coming in from the public reporting their neighbours for flouting the rules: 'We’re following the rules, why don’t they? What makes them think they are special?'\xa0 Gone are the past calls about drunken people leaving the pub. Instead, we have members of the public who are tired of being tied to the house and resentful of those who ignore the restrictions. After lunch, we receive a flurry of calls. There’s a domestic, involving a woman who tells me that ‘he didn’t mean to hit me, he loves me’. I spend time with this caller. There are three horses in the road. A driver has hit a dog and is upset, so I reassure him it wasn’t his fault. It gets busier. Essex is up and running but I am not. I feel tired but this is my job, so I make sure that nobody will hear it in my voice. Finally, it’s time to go home and hang up the headset for another day. I tend not to reflect on my day too much, so I can have some time to myself. There is no typical day in the control room.\n\n###\n\nPolice officers should ask the care home or local authority for details of the child’s risk assessment so that it can be taken into account during the investigation.\xa0Many forces are using the Philomena Protocol to guide their actions in relation to relevant cases involving children. A child, especially a teenager, is unlikely to share all information about their life with their parents or carers. Investigators should not overlook information from siblings, friends, associates, school teachers and others. The online activity of the child may also provide valuable additional information which parents and carers may not be aware of. For further information see: Children's views on being reported missing from care\xa0 No Place at Home - Risks facing children and young people who go missing from out of area placements Child Rescue Alert Child Rescue Alert\xa0(CRA) – (available to authorised users logged on to the restricted online\xa0College Learn) is a partnership between the police and the media which seeks public assistance when it is feared that a child may be at risk of serious harm. Assistance is sought via TV, radio, text messaging, social and digital media (including the internet) so that relevant information relating to the child, offender or any specified vehicle is passed on to the police. CRA\xa0focuses on the risk to the child, rather than whether or not an offence has taken place. The criteria for launching an alert is: The child is apparently under 18 years old There is a perception that the child is in imminent danger of serious harm or death There is sufficient information available to enable the public to assist police in locating the child Child Rescue Alert Activation Protocol\xa0(available to authorised users logged on to the restricted online\xa0College Learn) The\xa0CRA\xa0has been expanded to enable alerts to be disseminated by the charity Missing People. The system is managed by the National Crime\xa0Agency (NCA) and specialist advice is available 24/7 by contacting 0800\xa0234 6034.\n\n###\n\nThis is particularly true to the Greater Manchester area. As a result, this research seeks to utilise this appeal in providing a platform for young people who have received a Threats to Life Notice and children to parents who have received a Threat to Life Notice, in order to steer them away from potential criminal activity and receive mentoring through football coaching, education and employability skills. Operationally, this would seek to provide tactical options in the short and long-term in instances where a young person (under the age of 18) is particularly vulnerable as either a victim or perpetrator of criminal behaviour, and potentially reduce the threat, risk and harm pertaining to such individuals. The key aims are: to develop the individuals in the cohort with regards to qualifications, personal wellbeing, skill development, employability and social action (part of their local community and their perception of their community) – this in turn will potentially reduce the impact of trauma and increase confidence and self-esteem of the cohort to reduce the effects of adverse childhood experiences through re-sensitisation and raising awareness that adverse childhood experiences should not be considered the norm to understand and improve the delivery and impact of Threats to Life on young people to inform police forces on the best possible process and follow-on actions needed when delivering Threats to Life Notices  Research methodology A cohort of 16 young people between the ages of 13 to 18 will be identified through GMP’s systems who have either directly received a Threat to Life Notice in the past 12 months, or are children to a parent(s) who have received a Threat to Life Notice in the past 12 months. Their details will then be given to the mentors at the Manchester United Youth Foundation who then make contact through post in the first instance to invite the young person into the scheme. More individuals will be invited into the scheme as it progresses to ensure a minimum of 16 participants at any given stage (catering for any refusals to be involved or disengagement)."</code></pre>
+</div>
+</div>
+<p>Right, that seems to work. We now have user settings and content defined. Let’s try our first API call.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>about_yannik</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>" Yannik is a 15 year old boy. He has recently been down, and was reported missing by his parents as he did not return home from school today.\n\nHis friends are worried he may be depressed, and when he apparently told one a few days ago 'if it doesn't get any better, I'm going to end it soon'\n"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: you need to be using OpenAI Python v0.27.0 for the code below to work</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> openai</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>test_response <span class="op">=</span> openai.ChatCompletion.create(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  model<span class="op">=</span><span class="st">"gpt-3.5-turbo"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  messages<span class="op">=</span>[</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: copbot_chat_content},</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: about_yannik},</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: yannik_assistant_content},</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>test_response</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;OpenAIObject chat.completion id=chatcmpl-734cnqHtj5vmtx1RxZtZT8RhUkgbQ&gt; JSON: {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Graded as high risk because of the below risk factors:\n\n- The missing person is a 15-year-old boy who might be suffering from depression.\n- He was reported missing by his parents, who may have concerns about his mental state.\n- According to one of his friends, he expressed suicidal thoughts a few days before going missing.\n\nAny missing person report involving a potential mental health emergency should be treated as high risk. The fact that Yannik is a teenager and may not have fully developed coping mechanisms adds to the seriousness of the situation. As such, every possible measure should be taken to locate him as quickly as possible, and his current state of mind should be taken into account in any interactions with him.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1680967117,
+  "id": "chatcmpl-734cnqHtj5vmtx1RxZtZT8RhUkgbQ",
+  "model": "gpt-3.5-turbo-0301",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 143,
+    "prompt_tokens": 2049,
+    "total_tokens": 2192
+  }
+}</code></pre>
+</div>
+</div>
+<p>I think that worked! Let’s build it into a funciton</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: you need to be using OpenAI Python v0.27.0 for the code below to work</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> openai</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>test_response <span class="op">=</span> openai.ChatCompletion.create(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  model<span class="op">=</span><span class="st">"gpt-3.5-turbo"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  messages<span class="op">=</span>[</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: copbot_chat_content},</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: about_yannik},</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: yannik_assistant_content},</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>test_response</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;OpenAIObject chat.completion id=chatcmpl-734i2Qfm8STXFjPV66rQYhFcRUqmV&gt; JSON: {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Graded as high risk, because of the following risk factors:\n- Yannik has been reported missing after expressing suicidal ideation.\n- Yannik is a minor and his mental health is at risk, and he may not have the capacity to make decisions that ensure his safety. \n- The risk of harm to the public is low, but the risk of harm to the subject, Yannik, is very high.\n- It is imperative the police issue an immediate alert and work with Yannik's parents, school and other agencies who may have knowledge of his current location to swiftly locate him and provide mental health support, to help ensure his safety.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1680967442,
+  "id": "chatcmpl-734i2Qfm8STXFjPV66rQYhFcRUqmV",
+  "model": "gpt-3.5-turbo-0301",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 133,
+    "prompt_tokens": 2049,
+    "total_tokens": 2182
+  }
+}</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>test_response[<span class="st">'choices'</span>][<span class="dv">0</span>][<span class="st">'message'</span>][<span class="st">'content'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>"Graded as high risk, because of the following risk factors:\n- Yannik has been reported missing after expressing suicidal ideation.\n- Yannik is a minor and his mental health is at risk, and he may not have the capacity to make decisions that ensure his safety. \n- The risk of harm to the public is low, but the risk of harm to the subject, Yannik, is very high.\n- It is imperative the police issue an immediate alert and work with Yannik's parents, school and other agencies who may have knowledge of his current location to swiftly locate him and provide mental health support, to help ensure his safety."</code></pre>
+</div>
+</div>
+<p>I’m also going to increase our context length, given we’re using the discounted gpt3.5</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_chat_assistant_content(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    question, df, max_len<span class="op">=</span><span class="dv">3600</span>, size<span class="op">=</span><span class="st">"ada"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Create a context for a question by finding the most similar context from the dataframe</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get the embeddings for the question</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    q_embeddings <span class="op">=</span> openai.Embedding.create(<span class="bu">input</span><span class="op">=</span>question, engine<span class="op">=</span><span class="st">'text-embedding-ada-002'</span>)[<span class="st">'data'</span>][<span class="dv">0</span>][<span class="st">'embedding'</span>]</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get the distances from the embeddings</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'distances'</span>] <span class="op">=</span> distances_from_embeddings(q_embeddings, df[<span class="st">'embeddings'</span>].values, distance_metric<span class="op">=</span><span class="st">'cosine'</span>)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    returns <span class="op">=</span> [<span class="st">"Here is some relevant guidance and documentation from the College of Policing"</span>]</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    cur_len <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sort by distance and add the text to the context until the context is too long</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, row <span class="kw">in</span> df.sort_values(<span class="st">'distances'</span>, ascending<span class="op">=</span><span class="va">True</span>).iterrows():</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Add the length of the text to the current length</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>        cur_len <span class="op">+=</span> row[<span class="st">'n_tokens'</span>] <span class="op">+</span> <span class="dv">4</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If the context is too long, break</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> cur_len <span class="op">&gt;</span> max_len:</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Else add it to the text that is being returned</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>        returns.append(row[<span class="st">"text"</span>])</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return the context</span></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"</span><span class="ch">\n\n</span><span class="st">###</span><span class="ch">\n\n</span><span class="st">"</span>.join(returns)</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> copbot_chat_risk_assessment(individual_circumstances, df, show_return_details<span class="op">=</span><span class="va">False</span>, show_context<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Takes a user input string about the individual circumstances of a missing person, and returns a risk assessment"""</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>    individual_context <span class="op">=</span> create_chat_assistant_content(individual_circumstances, df)</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>    openai_response <span class="op">=</span> openai.ChatCompletion.create(</span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"gpt-3.5-turbo"</span>,</span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[</span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>            {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: copbot_chat_content},</span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>            {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: individual_circumstances},</span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>            {<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: individual_context},</span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> show_context:</span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(individual_context)</span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'</span><span class="ch">\n\n\n</span><span class="st">'</span>)</span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> show_return_details:</span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(openai_response)</span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'</span><span class="ch">\n\n\n</span><span class="st">'</span>)</span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> openai_response[<span class="st">'choices'</span>][<span class="dv">0</span>][<span class="st">'message'</span>][<span class="st">'content'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s test that on some of our previous examples.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>margaret_risk_profile <span class="op">=</span> <span class="st">""" Margaret is a 97 year old woman with severe dementia from Twickenham. She lives in supported accomodation, but regularly goes missing, as she walks out when left unsupervised.</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="st">She has been missing 6 hours, and it is now 2200.  It is getting dark, and staff are saying she is rarely missing this long"""</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>jason_risk_profile <span class="op">=</span> <span class="st">""" Jason is a 15 year old adult male, who has gone missing from his care home in Southwark. His carer has contacted the school, which has said he was not in today.</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="st">They that this is not the first time, and that Jason has been seen hanging out with older boys, who may be involved in crime and drugs."""</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>john_risk_profile <span class="op">=</span> <span class="st">"""John Smith is a 31 year old man who has been missing for 5 hours. He went to work as normal this morning, and has not returned home, and his partner is concerned. There are no signs of foul play, no vulnerabilities. John is in good health, the weather is good, and there are no concerns for his welfare."""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>copbot_chat_risk_assessment(margaret_risk_profile, df, show_return_details<span class="op">=</span><span class="va">True</span>, show_context<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Here is some relevant guidance and documentation from the College of Policing
+
+###
+
+.police.uk research projects maximizing effectiveness police scotland investigations when people living dementia go missing.            Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing | College of Policing             Sorry, you need to enable JavaScript to visit this website.    Skip to content Jump to search         Menu      Secondary navigation About us News &amp; views Contact us  Search Search     Main navigation Policing guidance Research Career &amp; learning Support for forces Ethics     Breadcrumb Home Research Research projects map           Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing            Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing         On this page     This research aims to explore the effectiveness of searches for people living with dementia who are reported as missing. Key details             Lead institution            Queen Margaret University             Principal researcher(s)            Alistair Shields [email&nbsp;protected]             Police region                   Scotland                    Level of research                   PhD                    Project start date            September 2018             Date due for completion            January 2023  Research context In Scotland annually there are approximately 530 missing person incidents reported to the police for people living with dementia. These incidents are emotionally distressing for the families and caregivers who do not know the whereabouts of the reported person. For the person living with dementia the consequences of being missing worsen with the passage of time. It has been suggested that when reported as missing the person travels toward a place orientated to their past. The knowledge of such locations to inform police investigations, when someone is reported as missing, is commonly not available. Aim For people living with dementia who are reported as missing to improve search effectiveness by better defining areas where police should search.
+
+###
+
+ First published 22 November 2016  Updated 15 March 2023   Latest changes  Written by College of Policing  Missing persons  30 mins read   Implications for the UK leaving the European Union are currently under review – please see&nbsp;APP&nbsp;on international investigation&nbsp;for latest available detail on specific areas, for example: Schengen Information System Europol INTERPOL Joint Investigation Teams This section provides additional information to aid the investigation based on the vulnerability of the individual and the circumstances in which they are missing. Missing children Safeguarding young and vulnerable people is a responsibility of the police service and partner agencies (see&nbsp;Children Act 2004). When the police are notified that a child is missing, there is a clear responsibility on them to prevent the child from coming to harm. Where appropriate, a strategy meeting may be held. For further information see: Voice of the child&nbsp; Voice of the child practice briefing&nbsp; Section 11 of the Children Act 2004 Department for Education (2014) Statutory guidance on children who run away or go missing from home or care Children’s Views on being Reported Missing from Care Young people and risky behaviour Children and young people often do not have the same levels of awareness or ability to keep themselves safe as adults. Going missing may indicate that something is wrong in their lives. Many of the children and young people who repeatedly go missing are considered by some to be ‘streetwise’ and able to look after themselves. However, these children may not understand the risk they are exposing themselves to, and should not be treated as low/no apparent risk simply due to their apparent willingness/complicity. Children&nbsp;may put themselves in danger because they may have been abused, neglected or rejected by their families or others and,&nbsp;as a result, they may engage in further risky behaviours, such as: misusing substances committing crimes having risky sexual contacts living on the streets mixing with inappropriate adults Information relevant to the child When a missing person report relates to a looked-after child, it is important to&nbsp;work with all the agencies and carers&nbsp;that&nbsp;have been&nbsp;in regular contact with the child as they&nbsp;may have information about the child that might help to locate them. When a child is missing from care, close engagement with the carers is important.
+
+###
+
+Threshold for referral of missing persons: the individual is a ‘repeat missing person’, (reported as missing three times in a rolling 90 day period) the individual has experienced, or is likely to experience significant harm for children, the parent or carer appears unable or unwilling to work to support and meet the needs of a child that has gone missing. The&nbsp;Protection Procedures&nbsp;also recommend that there is very close working between children's social care and policing to ensure that all investigations are undertaken efficiently and without duplication of effort. Where appropriate, a multi-agency meeting is convened after a child has been missing from home or care for more than seven days, or has been missing on more than three occasions in a twelve month period. While standard thresholds for referral may be useful, senior officers will want to be sure that a process is in place to ensure cases are recognised which may require a greater safeguarding response before the threshold has been reached. For example, individuals reported missing for the first time where significant risks have been identified should be referred immediately for multi-agency support, without requiring further reports. For further information see&nbsp;HM Government (2018) Working together to safeguard children: A guide to inter-agency working to safeguard and promote the welfare of children. Prevention and intervention strategies Collecting and analysing data about cases will help the police and other agencies to understand whether there are any patterns related to missing persons incidents. The results of routine data analysis should be shared to inform the development and review of prevention and intervention strategies. Missing Persons Coordinators are vital for this information analysis and sharing. Interventions might include, for example, the use of&nbsp;Child Abduction Warning Notices, or referrals to support services. It is important that such interventions take place in appropriate circumstances and are not used as a single response when a person is at risk of harm, but form one strand of a more comprehensive approach. Regular liaison between neighbourhood policing teams and children’s and adults’ care providers may enable relationships to be developed between police officers, the staff of care establishments, and individuals who are looked after. These relationships may then support effective police intervention and the speedy resolution of cases. For lessons from other cases, see&nbsp;IOPC&nbsp;Learning the Lesson. Understanding the reasons for going missing Understanding the reasons why an individual went missing may help to prevent future harm to those individuals. The officers in charge of local areas should have clear plans on how they intend to reduce the number of people who go missing in their area.
+
+###
+
+It’s also been raining heavily in the night and we have further calls about flooding in the road, so we ring Highways to inform them. I have a little smile to myself as I remember a call in the summer about cars stopping on the M11 because a mother duck and her ducklings were crossing the road. Lunchtime looms. I’m feeling hungry, but that disappears when I take a call from a 16-year-old male, who tells me that he can’t cope any more. He has cut himself with a knife but he doesn’t want to die. His sister has just had a baby. This goes on an emergency straight away, and officers are dispatched within three minutes. I have to talk to him about anything I can to distract him from his misery – luckily, I am good at small talk! Officers arrive and I feel relief as I can hang up the phone. COVID-19 has really affected Essex this year. People are low and weary. You can hear it in their voices. The number of mental health incidents has gone through the roof, and even the force control room team is quieter. Because of&nbsp;the onset of lockdown restrictions, more calls are coming in from the public reporting their neighbours for flouting the rules: 'We’re following the rules, why don’t they? What makes them think they are special?'&nbsp; Gone are the past calls about drunken people leaving the pub. Instead, we have members of the public who are tired of being tied to the house and resentful of those who ignore the restrictions. After lunch, we receive a flurry of calls. There’s a domestic, involving a woman who tells me that ‘he didn’t mean to hit me, he loves me’. I spend time with this caller. There are three horses in the road. A driver has hit a dog and is upset, so I reassure him it wasn’t his fault. It gets busier. Essex is up and running but I am not. I feel tired but this is my job, so I make sure that nobody will hear it in my voice. Finally, it’s time to go home and hang up the headset for another day. I tend not to reflect on my day too much, so I can have some time to myself. There is no typical day in the control room.
+
+###
+
+We have protected training days throughout the year, but it’s also each handler’s responsibility to maintain the dogs’ skills and abilities. Jack is yet to start his formal training but comes out with Annie, so that he gets used to the working day, as well as the sounds and movement of the car. When we get some downtime, he loves to play with Annie. After another walk and some training, we get out on patrol. We may be directed by our sergeant towards a particular area, based on the daily intelligence briefing or operational control strategy. Otherwise, we can patrol anywhere within the force footprint. The sarge shouts up on our back-to-back dog radio and asks us to attend a report of three pit bulls fighting in the street. Ideally, we should have two handlers per one dog, but often there are only three of us on duty on a day shift, so we have to work well as a team and think outside the box. We manage to safely contain the dogs using our dangerous dog kit and tactics. The dogs are seized on suspicion of being banned breeds and the owner is dealt with. Thankfully, no one has been injured. Next up is an elderly female with dementia, who has walked out of her care home. I make my way to the location as quickly as possible and set Annie up to begin tracking the woman from where she was last seen walking into some woods. It has rained recently and it’s cool, so the conditions are good for Annie to pick up the scent. She begins to track and picks up the scent, only for us to hear that the woman has been found nearby by a family member. This confirms that Annie was right and was hot on her heels – always trust your dog! Then it’s another walk and lunch for me – if there’s time. I overhear of a nearby burglary where the offender has made off. By the time I arrive, the offender has been detained but there is some outstanding stolen property. Annie conducts a property search and locates the items hidden in a bush, so the male can be dealt with fully for the offences he has committed. And Annie gets rewarded with her ball! Shortly after, another job comes in. A man has just violently attacked his ex-partner and is walking away from the address. I am only around the corner. Driving down the road, I see him and tell him to stay where he is. He takes one look at Annie and knows this is a fight he won’t win.
+
+###
+
+.police.uk research projects institution queen margaret university.            Queen Margaret University | College of Policing             Sorry, you need to enable JavaScript to visit this website.    Skip to content Jump to search         Menu      Secondary navigation About us News &amp; views Contact us  Search Search     Main navigation Policing guidance Research Career &amp; learning Support for forces Ethics     Breadcrumb Home Research Research projects map           Institution                 Queen Margaret University            Queen Margaret University         On this page     Research projects submitted by Queen Margaret University. Website: https://www.qmu.ac.uk/ Queen Margaret University is a university founded in 1875 and located in Edinburgh, Scotland. Research projects at Queen Margaret University  Project title Start date  Maximizing the effectiveness of Police Scotland investigations when people living with dementia go missing September 2018 Determining boundary conditions of the weapon focus effect September 2015    Back to all projects      Was this page useful?  Yes  No   Do not provide personal information such as your name or email address in the feedback form. Read our privacy policy for more information on how we use this data  What is the reason for your answer?  I couldn't find what I was looking for  I couldn't find what I was looking for  The information wasn't relevant to me  The information wasn't relevant to me  The information is too complicated  The information is too complicated  Other  Other   Add a comment (optional)       Leave this field blank             Footer Privacy policy Cookie policy Accessibility statement Diversity statement Copyright statement Content disclaimer Feedback Complaints       © College of Policing. All content (excluding logos and photographs) is available under the Non-Commercial College Licence except where otherwise stated. (2023).                 
+
+###
+
+ First published 22 November 2016  Updated 16 February 2023   Latest changes  Written by College of Policing  Missing persons  11 mins read   Introduction Going missing should be treated as an indicator that the individual may be at risk of harm. The safeguarding of vulnerable people is paramount and a missing person report should be recognised as an opportunity to identify and address risks. The reasons for a person deciding to go missing may be complex and linked to a variety of social or family issues. Three key factors should be considered in a missing person investigation: protecting those at risk of harm minimising distress and ensuring high quality of service to the families and carers of missing persons prosecuting those who perpetrate harm or pose a risk of harm when this is appropriate and supported by evidence Support for law enforcement agencies Police investigators can contact the following specialists for advice and assistance in missing and unidentified person investigations. UK Missing Persons Unit (UKMPU) on 0800&nbsp;234 6034 NCA&nbsp;Major Crime Investigative Support (MCIS) on 0345 000 5463 Definition of ‘missing’ Anyone whose whereabouts cannot be established will be considered as missing until located, and their well-being or otherwise confirmed. All reports of missing people sit within a continuum of risk from ‘no apparent risk (absent)’ through to high-risk cases&nbsp;that require immediate, intensive action.  Risk assessment and response The risk assessment table The following table should be used as a guide to&nbsp;an appropriate level of police response based on initial and on-going risk assessment in each case. Risk assessment should be guided by the College of Policing&nbsp;Risk principles,&nbsp;the&nbsp;National Decision Model&nbsp;and Police&nbsp;Code of Ethics. No apparent risk (absent) There is no apparent risk of harm to either the subject or the public. Actions to locate the subject and/or gather further information should be agreed with the informant and a latest review time set to reassess the risk. Low risk The risk of harm to the subject or the public is assessed as possible but minimal. Proportionate enquiries should be carried out to ensure that the individual has not come to harm. Medium risk The risk of harm to the subject or the public is assessed as likely but not serious. This category requires an active and measured response by the police and other agencies in order to trace the missing person and support the person reporting.
+
+###
+
+The charity works closely with police forces across the UK and can offer a range of services to support missing person investigations. Missing People provides the following: Family support Police can refer families to Missing People for support at any point during an investigation. There is a 24-hour confidential helpline (116000) which provides emotional and practical advice and support. Publicity The charity coordinates national or local targeted publicity on behalf of the police using a variety of media. Publicity can also be limited to safeguarding organisations (such as hostels) and kept out of the public domain, via the charity’s support partner network. When a family member asks for publicity, the relevant force will be contacted to obtain consent. Missing People is experienced in managing high-profile cases and complex investigations. Sightings There is a 24-hour free phone helpline to take sightings from the public. Missing People manages sightings and information on behalf of the police so that information is fed quickly into the investigation. TextSafe® At police request, a message with the 116 000 number can be sent to a missing person’s phone so that they know how to reach free confidential support. Child Rescue Alert The&nbsp;NCA is the delivery partner for issuing Child Rescue Alert appeals to the public at large via SMS, email and social and digital media. Missing People offers a variety of additional services for missing people and their families including a 24-hour helpline for missing children and adults, and a ‘Reconnect’ service. Website:&nbsp;missingpeople.org.uk Tel: 116000 (24 hours) Email:&nbsp;[email&nbsp;protected] The Lucie Blackman Trust Previously known as Missing Abroad, the&nbsp;Lucie Blackman Trust Charity&nbsp;can offer a wealth of support to the families of missing persons, from coordinating international searches, to simply being someone to talk to. Other charities and services There are also a range of charities that work with families that require mental and emotional support and&nbsp;bereavement services, see&nbsp;Sources of support.   Back to Missing persons overview   Tags Missing persons        Was this page useful?  Yes  No   Do not provide personal information such as your name or email address in the feedback form.
+
+
+
+
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Graded as high risk, because of the following factors:\n\nMargaret, a 97-year-old woman with severe dementia, has been missing for six hours, and it is now getting dark. Staff report that she is rarely missing for this long, and given her vulnerable state and her history of walking out when left unsupervised, there is a significant risk of harm to herself. Additionally, Margaret's lack of awareness due to her dementia renders her liable to poor decision-making, and she could unknowingly put herself in danger, especially since it has been raining heavily. Immediate urgent action needs to be taken to locate Margaret as soon as possible to prevent any potential harm.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1680967715,
+  "id": "chatcmpl-734mRQU4hgwSd6H4GzZWYN2R3H7wF",
+  "model": "gpt-3.5-turbo-0301",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 134,
+    "prompt_tokens": 3871,
+    "total_tokens": 4005
+  }
+}
+
+
+
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>"Graded as high risk, because of the following factors:\n\nMargaret, a 97-year-old woman with severe dementia, has been missing for six hours, and it is now getting dark. Staff report that she is rarely missing for this long, and given her vulnerable state and her history of walking out when left unsupervised, there is a significant risk of harm to herself. Additionally, Margaret's lack of awareness due to her dementia renders her liable to poor decision-making, and she could unknowingly put herself in danger, especially since it has been raining heavily. Immediate urgent action needs to be taken to locate Margaret as soon as possible to prevent any potential harm."</code></pre>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

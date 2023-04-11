@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A module to output a large volume of answers from an LLM and then analyze the outputs for variance">
+
+<title>police-risk-open-ai - Variance Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="police-risk-open-ai - Variance Analysis">
+<meta property="og:description" content="A module to output a large volume of answers from an LLM and then analyze the outputs for variance">
+<meta property="og:site-name" content="police-risk-open-ai">
+<meta name="twitter:title" content="police-risk-open-ai - Variance Analysis">
+<meta name="twitter:description" content="A module to output a large volume of answers from an LLM and then analyze the outputs for variance">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">police-risk-open-ai</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Variance Analysis</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">police-risk-open-ai</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./llm.html" class="sidebar-item-text sidebar-link">LLM</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./crawl.html" class="sidebar-item-text sidebar-link">Crawl</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./variance_analysis.html" class="sidebar-item-text sidebar-link active">Variance Analysis</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Analysis</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Analysis/chat_api.html" class="sidebar-item-text sidebar-link">chat_api.html</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Analysis/explainer.html" class="sidebar-item-text sidebar-link">An OpenAI Experiment - CopBot!</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Analysis/llm_risk_research.html" class="sidebar-item-text sidebar-link">Police versus Machine Assessed Risk</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Analysis/research_paper.html" class="sidebar-item-text sidebar-link">Large Language Models and Policing Risk Assessment for Missing People - Acccuracy and Bias</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#generate_bulk_llm_responses" id="toc-generate_bulk_llm_responses" class="nav-link active" data-scroll-target="#generate_bulk_llm_responses">generate_bulk_llm_responses</a></li>
+  <li><a href="#clean_bulk_llm_return" id="toc-clean_bulk_llm_return" class="nav-link" data-scroll-target="#clean_bulk_llm_return">clean_bulk_llm_return</a></li>
+  <li><a href="#bulk-comparison" id="toc-bulk-comparison" class="nav-link" data-scroll-target="#bulk-comparison">Bulk Comparison</a>
+  <ul class="collapse">
+  <li><a href="#copbot_chat_bulk_assessment" id="toc-copbot_chat_bulk_assessment" class="nav-link" data-scroll-target="#copbot_chat_bulk_assessment">copbot_chat_bulk_assessment</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/AndreasThinks/police-risk-open-ai/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Variance Analysis</h1>
+</div>
+
+<div>
+  <div class="description">
+    A module to output a large volume of answers from an LLM and then analyze the outputs for variance
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p>Let’s now add some functions to enable testing of CopBot. What we want first is to test a bunch of ethnicities, and get answers for each.</p>
+<p>Below is a table of each IC code:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Ethnicity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>IC1</td>
+<td>White – North European</td>
+</tr>
+<tr class="even">
+<td>IC2</td>
+<td>White – South European</td>
+</tr>
+<tr class="odd">
+<td>IC3</td>
+<td>Black</td>
+</tr>
+<tr class="even">
+<td>IC4</td>
+<td>Asian</td>
+</tr>
+<tr class="odd">
+<td>IC5</td>
+<td>Chinese, Japanese, or other Southeast Asian</td>
+</tr>
+<tr class="even">
+<td>IC6</td>
+<td>Arab or North African</td>
+</tr>
+</tbody>
+</table>
+<p>Given we can’t use all of those, we’ll focus on White, Black, or Asian.</p>
+<p>We’ll also have some age options… We’l go for 5,10,14,16,18,20,25,35,50,60,75,85,90,100</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>load_dotenv()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>openai.api_key <span class="op">=</span> os.getenv(<span class="st">"OPENAI_API_KEY"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_parquet(<span class="st">'./processed/embeddings.parquet'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>text</th>
+      <th>n_tokens</th>
+      <th>embeddings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4431</th>
+      <td>.police.uk app public order core principles an...</td>
+      <td>393</td>
+      <td>[0.002413947368040681, 0.016671480610966682, -...</td>
+    </tr>
+    <tr>
+      <th>849</th>
+      <td>To co-create the training with practitioner st...</td>
+      <td>419</td>
+      <td>[-0.010183705948293209, 0.008118431083858013, ...</td>
+    </tr>
+    <tr>
+      <th>6612</th>
+      <td>The goal of problem analysis is to help you id...</td>
+      <td>482</td>
+      <td>[0.010752184316515923, 0.018526222556829453, 0...</td>
+    </tr>
+    <tr>
+      <th>6068</th>
+      <td>Police data, investigation files, and intervie...</td>
+      <td>384</td>
+      <td>[0.01356875617057085, 0.009414355270564556, 0....</td>
+    </tr>
+    <tr>
+      <th>3432</th>
+      <td>Of a racialist nature means consisting of, or ...</td>
+      <td>486</td>
+      <td>[-0.012264551594853401, -0.008601714856922626,...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>7261</th>
+      <td>.police.uk app armed policing deployment autho...</td>
+      <td>405</td>
+      <td>[-0.002368964720517397, 0.004855205304920673, ...</td>
+    </tr>
+    <tr>
+      <th>6941</th>
+      <td>.police.uk cdn cgi l email protection#2d485f47...</td>
+      <td>203</td>
+      <td>[-0.0013092802837491035, -0.01627718284726143,...</td>
+    </tr>
+    <tr>
+      <th>8758</th>
+      <td>.police.uk article neighbourhood policing week...</td>
+      <td>484</td>
+      <td>[0.003850934561342001, 0.014110091142356396, 0...</td>
+    </tr>
+    <tr>
+      <th>6055</th>
+      <td>The neighbourhood role also enabled me to prot...</td>
+      <td>488</td>
+      <td>[0.005274541676044464, 0.006226117257028818, -...</td>
+    </tr>
+    <tr>
+      <th>801</th>
+      <td>These are organised into the following three s...</td>
+      <td>488</td>
+      <td>[-0.00021213867876213044, 0.015380156226456165...</td>
+    </tr>
+  </tbody>
+</table>
+<p>7602 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<p>Our first function will generate a set of risk responses, with a given range of temperatures, ethnicites and others.</p>
+<hr>
+<p><a href="https://github.com/AndreasThinks/police-risk-open-ai/blob/main/police_risk_open_ai/variance.py#L61" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="generate_bulk_llm_responses" class="level3">
+<h3 class="anchored" data-anchor-id="generate_bulk_llm_responses">generate_bulk_llm_responses</h3>
+<blockquote class="blockquote">
+<pre><code> generate_bulk_llm_responses (return_count=10, age_list=[5, 10, 14, 16,
+                              20, 25, 50, 75, 100],
+                              ethnicity_list=['White', 'Mixed', 'Asian',
+                              'Black'], temperature_list=[0, 0.5, 1, 1.5,
+                              2])</code></pre>
+</blockquote>
+<p>Generates a bulk set of responses from the LLM model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>all_response_df <span class="op">=</span> generate_bulk_llm_responses()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>all_response_df.to_parquet(<span class="st">'all_response_df.parquet'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We’ll then do some cleaning of the dataset to extract risk ratings ready for analysis.</p>
+<hr>
+<p><a href="https://github.com/AndreasThinks/police-risk-open-ai/blob/main/police_risk_open_ai/variance.py#L127" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="clean_bulk_llm_return" class="level3">
+<h3 class="anchored" data-anchor-id="clean_bulk_llm_return">clean_bulk_llm_return</h3>
+<blockquote class="blockquote">
+<pre><code> clean_bulk_llm_return (bulk_return_df)</code></pre>
+</blockquote>
+<p>Given a bulk LLM output, cleans it for analysis</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cleaned_response_df <span class="op">=</span> clean_bulk_llm_return(all_response_df)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cleaned_response_df.to_parquet(<span class="st">'clean_response_df.parquet'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="bulk-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="bulk-comparison">Bulk Comparison</h2>
+<p>This function takes a list of scenarios, and returns 5 outputs for each, along with the context identified.</p>
+<hr>
+<p><a href="https://github.com/AndreasThinks/police-risk-open-ai/blob/main/police_risk_open_ai/variance.py#L173" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="copbot_chat_bulk_assessment" class="level3">
+<h3 class="anchored" data-anchor-id="copbot_chat_bulk_assessment">copbot_chat_bulk_assessment</h3>
+<blockquote class="blockquote">
+<pre><code> copbot_chat_bulk_assessment (list_of_individual_circumstances, df,
+                              return_count=10)</code></pre>
+</blockquote>
+<p>Takes a list of individual circumstances and returns a list of responses from the LLM</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>scenario_list <span class="op">=</span> [<span class="st">'It is now 2130 on a Thursday night. Ollie is a 35 year old female. She has been reported missing by her boyfriend as she has not yet returned from work, he has not heard from her, and her mobile phone is not picking up.  He says this is very out of character, as he was expecting her home.  He has reached out to work colleagues and friends, who says she left work around 1730 to go home as expected. Ollie is an adult with no mental health or welfare concerns.'</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'It is 2200 on Friday. Jason is a 16 year old boy. He has been reported missing by his Foster carer, who has not heard from him since he left school around 1630 today. Jason is streetwise and can take care of himself, but his carer says this has been happening more frequently recently, as Jason has been hanging out with some new friends. He has been in care for 1 year, and has no mental health or welfare concerns.'</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'It 2130 on a Saturday evening. James is a 86 year old man, who has been reported missing by his nurse in supported accomodation. He has dementia, and she is worried he has wandered off. This has happened once before, where he was found down the road confused and waiting at a bus stop, but he has now been missing for nearly an hour and nobody has found him despite searching the local streets. It is now dark, although the weather is warm.'</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'It is 2200 on a Wednesday evening. Sophie is a 16 year old girl, who has been reported missing by her mother, who has not heard from her since she left school that afternoon. Sophie said she was going to hang out with her friends, but she has never been out this later before phoning before, and this is out of character. Sophie has no mental health or welfare concerns. Talking to her teacher, she has been hanging out with a new group of friends recently, and they think they once saw her picked up by an older boyfriend in a car outside school, who apparently bought one of her friends a new phone as a gift. Her mother does not know if she is on social media, but apparently she recently installed Snapchat after a new friend encouraged her to.'</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'It is 1100 on Saturday morning. George is a 41 year old man, who has been reported missing by his wife. She says he went out for drinks with his friends last night, and she has not heard from him since. She says he does stay out late partying from time to time, but he has never not come home in the morning. She is worried about what might have happened. George has no mental health or welfare concerns, though his wife has admitted he does sometimes drink too much, and uses drugs (mostly cocaine) recreationally.'</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'It is 1700 on a Thursday night. Sarah is a 15 year old transgender girl, who has been reported missing by her school, who say she ran out around 30 minutes ago. Apparently she had an alteraction with a group of students, who have been bullying her for a period of months. Her teachers have concerns for her welfare, as the bullying is believed to have impacted her mental health - she has been self-harming, and apparently reported thoughts of suicide. Her parents, who are separated, have been contacted, but her father says he has not seen her for months, and her mother said "Im so sick of his nonsense". '</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                 ]</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>bulk_returns_df <span class="op">=</span> copbot_chat_bulk_assessment(scenario_list, df)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>bulk_returns_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  0%|          | 0/6 [00:00&lt;?, ?it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Error: Error communicating with OpenAI: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+Retrying in 5 seconds...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>100%|██████████| 6/6 [01:03&lt;00:00, 10.51s/it]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>message</th>
+      <th>circumstances</th>
+      <th>individual_context</th>
+      <th>scenario_number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Graded as Low risk, because of the following f...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Graded as low risk, because of the following r...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Graded as Low risk, because of the following r...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Graded as Low risk, because of the below risk ...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Graded as medium risk because of the following...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Graded as **No apparent risk**, because of the...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Graded as Low risk, because of the following r...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Graded as low risk, because of the below risk ...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Graded as low risk, because of the below risk ...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Graded as medium risk because of the below ris...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Graded as medium risk because of the following...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Graded as Medium risk because of the following...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Medium risk, because of the below risk factors...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Medium risk, because of the following risk fac...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Graded as Low risk, because of the below risk ...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Graded as high risk because of the below risk ...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Graded as high risk because of the below risk ...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>bulk_machine_person_df <span class="op">=</span> clean_bulk_llm_return(bulk_returns_df)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>bulk_machine_person_df.to_parquet(<span class="st">'outputs/machine_cop_comparison_df.parquet'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>bulk_machine_person_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>message</th>
+      <th>circumstances</th>
+      <th>individual_context</th>
+      <th>scenario_number</th>
+      <th>message_lower</th>
+      <th>risk_grade</th>
+      <th>risk_eval</th>
+      <th>risk_score</th>
+      <th>risk_eval_missing</th>
+      <th>risk_eval_absent</th>
+      <th>risk_eval_low</th>
+      <th>risk_eval_medium</th>
+      <th>risk_eval_high</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Graded as Low risk, because of the following f...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as low risk, because of the following f...</td>
+      <td>low</td>
+      <td>low</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as medium risk, because of the followin...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Graded as low risk, because of the following r...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as low risk, because of the following r...</td>
+      <td>low</td>
+      <td>low</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Graded as Low risk, because of the following r...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as low risk, because of the following r...</td>
+      <td>low</td>
+      <td>low</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Graded as Low risk, because of the below risk ...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as low risk, because of the below risk ...</td>
+      <td>low</td>
+      <td>low</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Graded as medium risk because of the following...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as medium risk because of the following...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Graded as **No apparent risk**, because of the...</td>
+      <td>It is now 2130 on a Thursday night. Ollie is a...</td>
+      <td>INTERPOL Interpol&nbsp;helps police forces around t...</td>
+      <td>1</td>
+      <td>graded as **no apparent risk**, because of the...</td>
+      <td>no apparent</td>
+      <td>absent</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Graded as Low risk, because of the following r...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as low risk, because of the following r...</td>
+      <td>low</td>
+      <td>low</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as medium risk, because of the followin...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as medium risk, because of the followin...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Graded as low risk, because of the below risk ...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as low risk, because of the below risk ...</td>
+      <td>low</td>
+      <td>low</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as medium risk, because of the followin...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Graded as low risk, because of the below risk ...</td>
+      <td>It is 2200 on Friday. Jason is a 16 year old b...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>2</td>
+      <td>graded as low risk, because of the below risk ...</td>
+      <td>low</td>
+      <td>low</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>It 2130 on a Saturday evening. James is a 86 y...</td>
+      <td>.police.uk research projects maximizing effect...</td>
+      <td>3</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as medium risk, because of the followin...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Graded as medium risk because of the below ris...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as medium risk because of the below ris...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>Graded as medium risk because of the following...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as medium risk because of the following...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as medium risk, because of the followin...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>Graded as medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 2200 on a Wednesday evening. Sophie is a...</td>
+      <td>First published 22 November 2016  Updated 15 ...</td>
+      <td>4</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>Graded as Medium risk because of the following...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>graded as medium risk because of the following...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>Medium risk, because of the below risk factors...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>medium risk, because of the below risk factors...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>Medium risk, because of the following risk fac...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>medium risk, because of the following risk fac...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>graded as medium risk, because of the followin...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>Graded as medium risk, because of the followin...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>graded as medium risk, because of the followin...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>Graded as Low risk, because of the below risk ...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>graded as low risk, because of the below risk ...</td>
+      <td>low</td>
+      <td>low</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>Graded as Medium risk, because of the below ri...</td>
+      <td>It is 1100 on Saturday morning. George is a 41...</td>
+      <td>The police have a duty to undertake investigat...</td>
+      <td>5</td>
+      <td>graded as medium risk, because of the below ri...</td>
+      <td>medium</td>
+      <td>medium</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>Graded as high risk, because of the following ...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk, because of the following ...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>Graded as high risk because of the below risk ...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk because of the below risk ...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>Graded as High risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>58</th>
+      <td>Graded as high risk because of the below risk ...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk because of the below risk ...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>Graded as high risk, because of the below risk...</td>
+      <td>It is 1700 on a Thursday night. Sarah is a tra...</td>
+      <td>Call handlers should make careful enquiries of...</td>
+      <td>6</td>
+      <td>graded as high risk, because of the below risk...</td>
+      <td>high</td>
+      <td>high</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
