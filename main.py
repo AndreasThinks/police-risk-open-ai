@@ -12,7 +12,7 @@ st.title('Missing Risk Scanner')
 
 st.markdown('''This scanner uses the [ChatGPT 3.5 API from OpenAI](https://openai.com/), as well as information from [the College of Policing](https://www.college.police.uk/), to attempt to produce risk assessments in relation to missing people.
 
-This tool is *highly experimental*, inteded as a proof of concept, and should not be used with real personal data.''')
+This tool is *highly experimental*, inteded as a proof of concept, and should not be used with real personal data. A blog post with more detail [is available here.](https://andreasthinks.me/posts/Copbot/explainer.html)''')
 
 @st.cache_data
 def load_data():
